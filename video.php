@@ -1,5 +1,5 @@
 <?php
-class Crb_Video {
+abstract class Crb_Video {
 	const DEFAULT_WIDTH = 640;
 	const DEFAULT_HEIGHT = 480;
 
@@ -22,7 +22,7 @@ class Crb_Video {
 	static function create($video) {
 		$video = trim($video);
 
-		// Try to catch youtube.com, youtu.be, youtube-nocookie
+		// Try to catch youtube.com, youtu.be, youtube-nocookie.com
 		if (preg_match('~(https?:)?//(www\.)?(youtube(-nocookie)?\.com|youtu\.be)~i', $video)) {
 			return new Crb_VideoYoutube($video);
 
@@ -36,17 +36,9 @@ class Crb_Video {
 		throw new Crb_Video_Exception("Can't recognize video: $video");
 	}
 
-	function get_thumbnail() {
+	abstract function get_thumbnail();
 
-	}
-
-	function get_embed_code() {
-		
-	}
-
-	function set_param() {
-
-	}
+	abstract function get_embed_code();
 
 	/**
 	 * Whether a video is autoplay  
@@ -166,77 +158,6 @@ class Crb_Video {
 }
 
 class Crb_Video_Exception extends Exception {}
-
-class Crb_VideoVimeo extends Crb_Video {
-	public $cache_lifetime = 300;
-
-	/**
-	 * @param integer $width
-	 * @param integer $height
-	 * @return vimeo embed code
-	 */
-	function get_embed_code($width=self::DEFAULT_WIDTH, $height=self::DEFAULT_HEIGHT) {
-
-		$width = intval($width);
-		$height = intval($height);
-
-		preg_match('~vimeo.com/([\d]+)~', $this->url, $video_id);
-	
-		return '<iframe src="http://player.vimeo.com/video/' . $video_id[1] . '?title=0&amp;byline=0&amp;portrait=0&amp;color=ffffff' . ($this->autoplay ? '&amp;autoplay=autoplay' : '') . '" width="' . $width . '" height="' . $height . '" frameborder="0" webkitAllowFullScreen allowFullScreen></iframe>';
-	}
-
-	/**
-	 * Whether to return a large vimeo thumbnail.
-	 * @param bool $large
-	 * @return vimeo thumbnail
-	 **/
-	function get_thumbnail($large = false) {
-		$embed_code = $this->get_embed_code();
-		if (preg_match('~iframe~', $embed_code)) {
-			preg_match('~src="[^"]*video/([^?&]*)[^"]*"~', $embed_code, $video_id);
-		} else {
-			preg_match('~clip_id=(.*?)&~', $embed_code, $video_id);
-		}
-
-		if(empty($video_id[1])) {
-			throw new Crb_Video_Exception("This is not valid vimeo url address. ");
-		}
-
-		$url = "http://vimeo.com/api/v2/video/".$video_id[1].".php";
-		$cache_id = 'vimeocache::' . md5($url);
-
-		$cached = get_option($cache_id, false);
-		$has_cache = (bool)$cached;
-		$is_expired = isset($cached['expires']) && time() > $cached['expires'];
-		$has_cache = false;
-		if (!$has_cache || $is_expired) {
-			$data = wp_remote_get($url);
-			if (!is_wp_error($data)) {
-				$data = $data['body'];
-				
-				$video_cache = array(
-					'data'=>$data,
-					'expires'=>time() + $this->cache_lifetime,
-				);
-				
-				update_option($cache_id, $video_cache);
-
-			} else {
-				$data = false;
-			}
-		} else {
-			$data = $cached['data'];
-		}
-		$finaldata = unserialize($data);
-		$size = 'thumbnail_medium';
-		if($large) {
-			$size = 'thumbnail_large';
-		}
-		return $finaldata[0][$size];
-
-	}
-
-}
 
 class Crb_VideoYoutube extends Crb_Video {
 	/**

@@ -138,14 +138,37 @@ class Crb_Video {
 	function get_id() {
 		return $this->video_id;
 	}
+
+	// If width and height are not provided in the function parameters,
+	// get them from the initial video code; if the object wasn't constructed
+	// from an embed code(and doesn't have initial width and height), use 
+	// the default, hard-coded dimensions. 
+
+	protected function get_embed_width($user_supplied_width) {
+		if (!is_null($user_supplied_width)) {
+			return $user_supplied_width;
+		}
+		if (!empty($this->dimensions['width'])) {
+			return $this->dimensions['width'];
+		}
+		return self::DEFAULT_WIDTH;
+	}
+
+	function get_embed_height($user_supplied_height) {
+		if (!is_null($user_supplied_height)) {
+			return $user_supplied_height;
+		}
+		if (!empty($this->dimensions['height'])) {
+			return $this->dimensions['height'];
+		}
+		return self::DEFAULT_HEIGHT;
+	}
 }
 
 class Crb_Video_Exception extends Exception {}
 
 class Crb_VideoVimeo extends Crb_Video {
 	public $cache_lifetime = 300;
-	
-
 
 	/**
 	 * @param integer $width
@@ -224,7 +247,6 @@ class Crb_VideoYoutube extends Crb_Video {
 
 	/**
 	 * Constructs new object from various video inputs. 
-	 * 
 	 */
 	function __construct($video) {
 		// Try to parse the video code in the following order:
@@ -244,7 +266,7 @@ class Crb_VideoYoutube extends Crb_Video {
 
 		$regexes = array(
 			// Something like: https://www.youtube.com/watch?v=lsSC2vx7zFQ
-			"youtube_url_regex" =>
+			"url_regex" =>
 				'~^' . 
 					$protocol_regex_fragment . 
 					'(?P<domain>(?:www\.)?youtube\.com)/watch\?v=' . 
@@ -252,7 +274,7 @@ class Crb_VideoYoutube extends Crb_Video {
 				'~i', 
 
 			// Something like "http://youtu.be/lsSC2vx7zFQ" or "http://youtu.be/6jCNXASjzMY?t=3m11s"
-			"youtube_share_url_regex" =>
+			"share_url_regex" =>
 				'~^' .
 					$protocol_regex_fragment .
 					'youtu\.be/' .
@@ -262,7 +284,7 @@ class Crb_VideoYoutube extends Crb_Video {
 
 			// Youtube embed iframe code: 
 			// <iframe width="560" height="315" src="//www.youtube.com/embed/LlhfzIQo-L8?rel=0" frameborder="0" allowfullscreen></iframe>
-			"youtube_embed_code_regex" =>
+			"embed_code_regex" =>
 				'~^'.
 					'<iframe.*?src=[\'"]' .
 					$protocol_regex_fragment .
@@ -274,14 +296,14 @@ class Crb_VideoYoutube extends Crb_Video {
 			// Youtube old embed flash code:
 			// <object width="234" height="132"><param name="movie" ....
 			// .. type="application/x-shockwave-flash" width="234" height="132" allowscriptaccess="always" allowfullscreen="true"></embed></object>
-			"youtube_old_embed_code_regex" =>
+			"old_embed_code_regex" =>
 				'~^'.
 					'<object.*?' .
 					$protocol_regex_fragment .
-					'(?P<domain>(www\.)?youtube(?:-nocookie)?\.com)/embed/' . 
+					'(?P<domain>(www\.)?youtube(?:-nocookie)?\.com)/v/' . 
 					$video_id_regex_fragment .
 					$args_regex_fragment . 
-				'~[\'"]i'
+				'[\'"]~i'
 		);
 
 		$args = array();
@@ -296,6 +318,12 @@ class Crb_VideoYoutube extends Crb_Video {
 					// & in the URLs is encoded as &amp;, so fix that before parsing
 					$args = htmlspecialchars_decode($matches['arguments']);
 					parse_str($args, $arguments);
+
+					if ($video_input_type === 'old_embed_code_regex') {
+						// Those are legacy arguments for the flash player
+						unset($arguments['hl'], $arguments['version']);
+					}
+
 					foreach ($arguments as $arg_name => $arg_val) {
 						$this->set_argument($arg_name, $arg_val);
 					}
@@ -312,8 +340,8 @@ class Crb_VideoYoutube extends Crb_Video {
 
 		// For embed codes, width and height should be extracted
 		$is_embed_code = in_array($video_input_type, array(
-			'youtube_embed_code_regex',
-			'youtube_old_embed_code_regex'
+			'embed_code_regex',
+			'old_embed_code_regex'
 		));
 
 		if ($is_embed_code) {
@@ -329,7 +357,9 @@ class Crb_VideoYoutube extends Crb_Video {
 			throw new Crb_Video_Exception("Couldn't parse video input. ");
 		}
 	}
-
+	/**
+	 * Returns share link for the video, e.g. http://youtu.be/6jCNXASjzMY?t=1s
+	 */
 	function get_share_link() {
 
 		$url = '//youtu.be/' . $this->video_id;
@@ -346,16 +376,8 @@ class Crb_VideoYoutube extends Crb_Video {
 	 * Returns iframe-based embed code.
 	 */
 	function get_embed_code($width=null, $height=null) {
-		// If width and height are not provided in the function parameters,
-		// get them from the initial video code; if the object wasn't constructed
-		// from embed code(and doesn't have initial dimentions), use the default
-		// hard-coded dimensions. 
-		if (!isset($width)) {
-			$width = empty($this->dimensions['width']) ? self::DEFAULT_WIDTH : $this->dimensions['width'];
-		}
-		if (!isset($height)) {
-			$height = empty($this->dimensions['height']) ? self::DEFAULT_HEIGHT : $this->dimensions['height'];
-		}
+		$width = $this->get_embed_width($width);		
+		$height = $this->get_embed_height($height);		
 
 		$url = '//' . $this->domain . '/embed/' . $this->video_id;
 
@@ -367,28 +389,40 @@ class Crb_VideoYoutube extends Crb_Video {
 	}
 
 	/**
-	 * Whether to return a large youtube thumbnail.
-	 * @param bool $large
-	 * @return youtube thumbnail
-	 **/
-	function get_thumbnail($large = false) {
-		$embed_code = $this->get_embed_code();
-		if (preg_match('~iframe~', $embed_code)) {
-			preg_match('~src="[^"]*(embed/)([^\?&"]*)~', $embed_code, $video_id);
-		} else {
-			preg_match('~(v/|v=)([a-zA-Z0-9]+)(\?|&|\z)~', $embed_code, $video_id);
-		}
+	 * Returns flash-based embed code.
+	 */
+	function get_flash_embed_code($width=null, $height=null) {
+		$width = $this->get_embed_width($width);		
+		$height = $this->get_embed_height($height);		
 
-		$size = 'mqdefault';
-		if($large) {
-			$size = '0';
-		}
+		$url = '//' . $this->domain . '/v/' . $this->video_id;
 
-		if(empty($video_id[2])) {
-			throw new Crb_Video_Exception("This is not valid youtube url address.");
-		}
+		$args = array_merge(array(
+			'version'=>'3',
+			'hl'=>'en_US',
+		), $this->arguments);
 
-		return 'http://img.youtube.com/vi/' . $video_id[2] . '/' . $size . '.jpg';
+		$url .= '?' . htmlspecialchars(http_build_query($args));
+		
+		return 
+			'<object width="' . $width . '" height="' . $height . '">' . 
+				'<param name="movie" value="' . $url . '"></param>' . 
+				'<param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param>' . 
+				'<embed src="' . $url . '" type="application/x-shockwave-flash" width="' . $width . '" height="' . $height . '" allowscriptaccess="always" allowfullscreen="true"></embed>' . 
+			'</object>';
 	}
 
+	/**
+	 * Returns image for the video
+	 **/
+	function get_image() {
+		return '//img.youtube.com/vi/' . $this->video_id . '/0.jpg';
+	}
+
+	/**
+	 * Returns thumbnail for the video
+	 **/
+	function get_thumbnail() {
+		return '//img.youtube.com/vi/' . $this->video_id . '/default.jpg';
+	}
 }

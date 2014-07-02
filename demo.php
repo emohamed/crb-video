@@ -35,6 +35,15 @@ require "video.php";
 		
 		<h3>Accept HTML Embed code and get screenshot</h3>
 		<img src="<?php echo Crb_Video::create('<iframe width="560" height="315" src="//www.youtube.com/embed/n4RjJKxsamQ?rel=0" frameborder="0" allowfullscreen></iframe>')->get_image(); ?>" alt="">
+
+		<h3>Accept HTML Embed code, remove controls, add autoplay, and print flash embed</h3>
+		<?php
+			$embed_code = '<iframe width="560" height="315" src="//www.youtube.com/embed/n4RjJKxsamQ?rel=0" frameborder="0" allowfullscreen></iframe>';
+
+			echo Crb_Video::create($embed_code)
+			    ->set_argument('controls', 0)
+			    ->get_flash_embed_code();
+		?>
 	</div>
 </body>
 </html>

@@ -1,0 +1,68 @@
+   ---- YouTube
+
+https://www.youtube.com/watch?v=6jCNXASjzMY
+
+## Embed Codes
+// 1. New code, no suggestions, no privacy-enhanced enabled
+<iframe width="640" height="480" src="//www.youtube.com/embed/6jCNXASjzMY?rel=0" frameborder="0" allowfullscreen></iframe>
+
+// 2. New code, with suggestions, no privacy-enhanced enabled
+<iframe width="640" height="480" src="//www.youtube.com/embed/6jCNXASjzMY" frameborder="0" allowfullscreen></iframe>
+
+// 3. New code, no suggestions, with privacy-enhanced enabled
+<iframe width="640" height="480" src="//www.youtube-nocookie.com/embed/6jCNXASjzMY?rel=0" frameborder="0" allowfullscreen></iframe>
+
+// 3. New code, with suggestions, with privacy-enhanced enabled
+<iframe width="640" height="480" src="//www.youtube-nocookie.com/embed/6jCNXASjzMY" frameborder="0" allowfullscreen></iframe>
+
+// 4. Old code, no suggestions, no privacy-enhanced
+<object width="640" height="480"><param name="movie" value="//www.youtube.com/v/6jCNXASjzMY?hl=en_US&amp;version=3&amp;rel=0"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="//www.youtube.com/v/6jCNXASjzMY?hl=en_US&amp;version=3&amp;rel=0" type="application/x-shockwave-flash" width="640" height="480" allowscriptaccess="always" allowfullscreen="true"></embed></object>
+
+// 5. Old code, with suggestions, no privacy-enhanced
+<object width="640" height="480"><param name="movie" value="//www.youtube.com/v/6jCNXASjzMY?hl=en_US&amp;version=3"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="//www.youtube.com/v/6jCNXASjzMY?hl=en_US&amp;version=3" type="application/x-shockwave-flash" width="640" height="480" allowscriptaccess="always" allowfullscreen="true"></embed></object>
+
+// 6. Old code, no suggestions, with privacy-enhanced
+<object width="640" height="480"><param name="movie" value="//www.youtube-nocookie.com/v/6jCNXASjzMY?hl=en_US&amp;version=3&amp;rel=0"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="//www.youtube-nocookie.com/v/6jCNXASjzMY?hl=en_US&amp;version=3&amp;rel=0" type="application/x-shockwave-flash" width="640" height="480" allowscriptaccess="always" allowfullscreen="true"></embed></object>
+
+// 7. Old code, with suggestions, with privacy-enhanced
+<object width="640" height="480"><param name="movie" value="//www.youtube-nocookie.com/v/6jCNXASjzMY?hl=en_US&amp;version=3"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="//www.youtube-nocookie.com/v/6jCNXASjzMY?hl=en_US&amp;version=3" type="application/x-shockwave-flash" width="640" height="480" allowscriptaccess="always" allowfullscreen="true"></embed></object>
+
+// Share URL
+http://youtu.be/6jCNXASjzMY
+
+// Share URL with start time 03:11
+http://youtu.be/6jCNXASjzMY?t=3m11s
+
+// Share URL with start time 00:15
+http://youtu.be/6jCNXASjzMY?t=15s
+
+/**/
+
+   ---- Vimeo
+
+// Share URL
+http://vimeo.com/2526536
+
+// Share URL with start time 00:15
+http://vimeo.com/2526536#t=15s
+
+// Share URL with start time 03:15
+http://vimeo.com/2526536#t=195s
+
+// Embed
+<iframe src="//player.vimeo.com/video/2526536?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+// Embed with c9ff23 color scheme
+<iframe src="//player.vimeo.com/video/2526536?title=0&amp;byline=0&amp;portrait=0&amp;color=c9ff23" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+// Embed with portrait
+<iframe src="//player.vimeo.com/video/2526536?title=0&amp;byline=0&amp;color=ffffff" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+// Embed with portrait
+<iframe src="//player.vimeo.com/video/2526536?title=0&amp;byline=0&amp;color=ffffff" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+/* ... so on*/
+
+<iframe src="//player.vimeo.com/video/2526536?title=0&amp;byline=0&amp;color=ffffff" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p>Work I did for SC2GG website. A community for Startcraft II from Blizzard Entertainment</p>
+
+/* old embed code*/

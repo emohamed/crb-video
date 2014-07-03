@@ -54,6 +54,7 @@ $embed_code = '<iframe width="560" height="315" src="//www.youtube.com/embed/n4R
 
 echo Carbon_Video::create($embed_code)
     ->set_argument('controls', 0)
+    ->set_argument('autoplay', 1)
     ->get_embed_code();
 ?>
 ```

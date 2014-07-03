@@ -38,6 +38,7 @@ require "src/video.php";
 
 			echo Carbon_Video::create($embed_code)
 			    ->set_argument('controls', 0)
+			    ->set_argument('autoplay', 1)
 			    ->get_embed_code();
 		?>
 	</div>

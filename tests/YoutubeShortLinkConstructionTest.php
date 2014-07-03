@@ -2,7 +2,7 @@
 require_once('load.php');
 class YoutubeShortLinkConstructionTest extends PHPUnit_Framework_TestCase {
 	function setup() {
-		$this->video = Crb_Video::create("http://youtu.be/KnL2RJZTdA4?t=1m1s");
+		$this->video = Carbon_Video::create("http://youtu.be/KnL2RJZTdA4?t=1m1s");
 	}
 
 	function tearDown() {

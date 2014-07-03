@@ -4,7 +4,7 @@ require_once('load.php');
 class YoutubeIframeEmbedTest extends PHPUnit_Framework_TestCase {
 
 	function setUp() {
-		$this->video = Crb_Video::create('<iframe width="640" height="480" src="//www.youtube.com/embed/6jCNXASjzMY?rel=0" frameborder="0" allowfullscreen></iframe>');
+		$this->video = Carbon_Video::create('<iframe width="640" height="480" src="//www.youtube.com/embed/6jCNXASjzMY?rel=0" frameborder="0" allowfullscreen></iframe>');
 	}
 
 	function tearDown() {
@@ -12,7 +12,7 @@ class YoutubeIframeEmbedTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function testConstructor() {
-		$this->assertTrue($this->video instanceof Crb_VideoYoutube);
+		$this->assertTrue($this->video instanceof Carbon_VideoYoutube);
 		
 	}
 

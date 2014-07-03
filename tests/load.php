@@ -1,2 +1,2 @@
 <?php 
-require_once('../video.php');
+require_once(dirname(dirname(__FILE__)) . '/video.php');

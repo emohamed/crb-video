@@ -3,7 +3,7 @@ require_once('load.php');
 
 class YoutubeUrlConstructionTest extends PHPUnit_Framework_TestCase {
 	function setup() {
-		$this->video = Crb_Video::create("https://www.youtube.com/watch?v=lsSC2vx7zFQ");
+		$this->video = Carbon_Video::create("https://www.youtube.com/watch?v=lsSC2vx7zFQ");
 	}
 
 	function tearDown() {

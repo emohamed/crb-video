@@ -12,6 +12,14 @@ abstract class Carbon_Video {
 
 	protected $arguments = array();
 
+	protected $regex_fragments = array(
+		// Describe "http://" or "https://" or "//"
+		"protocol" => '(?:https?:)?//',
+
+		// Describe GET args list
+		"args" => '(?:\?(?P<arguments>.+?))?',
+	);
+
 	/**
 	 * Parses embed code, url, or video ID and creates new object based on it. 
 	 * 
@@ -41,12 +49,16 @@ abstract class Carbon_Video {
 		return $video;
 	}
 
-	abstract function parse($video_code);
-	abstract function get_thumbnail();
-	abstract function get_share_link();
-	abstract function get_link();
-	abstract function get_embed_code($width=null, $height=null);
-	abstract function get_flash_embed_code($width=null, $height=null);
+	abstract public function parse($video_code);
+	abstract public function get_thumbnail();
+	abstract public function get_share_link();
+	abstract public function get_link();
+	abstract public function get_embed_code($width=null, $height=null);
+	abstract public function get_flash_embed_code($width=null, $height=null);
+
+	function __construct() {
+		
+	}
 
 	public function get_width() {
 		return $this->dimensions['width'];
@@ -79,7 +91,6 @@ abstract class Carbon_Video {
 		$this->arguments[$arg] = $val;
 		return $this;
 	}
-
 	
 	function get_id() {
 		return $this->video_id;
@@ -113,6 +124,29 @@ abstract class Carbon_Video {
 
 class Carbon_Video_Exception extends Exception {}
 
+class Carbon_VideoVimeo extends Carbon_Video {
+	function parse($video_code) {
+		// $regex
+	}
+	function get_thumbnail() {
+
+	}
+	function get_share_link() {
+
+	}
+	function get_link() {
+
+	}
+	function get_embed_code($width=null, $height=null) {
+
+	}
+	function get_flash_embed_code($width=null, $height=null) {
+
+	}
+	function get_id() {
+
+	}
+}
 class Carbon_VideoYoutube extends Carbon_Video {
 	/**
 	 * The default domain name for youtube videos
@@ -130,40 +164,36 @@ class Carbon_VideoYoutube extends Carbon_Video {
 	 * @var boolean|integer
 	 */
 	protected $shortlink_start = false;
+	
+	function __construct() {
+		$this->regex_fragments = array_merge($this->regex_fragments, array(
+			// Desribe youtube video ID 
+			"video_id" => '(?P<video_id>[\w\-]*)',
+		));
+		parent::__construct();
+	}
 
 	/**
 	 * Constructs new object from various video inputs. 
 	 */
-	function __construct() {
-		
-	}
-
 	function parse($video) {
-		// Describe "http://" or "https://" or "//"
-		$protocol_regex_fragment = '(?:https?:)?//';
-
-		// Desribe youtube video ID 
-		$video_id_regex_fragment = '(?P<video_id>[\w\-]*)';
-
-		// Desribe youtube video arguments(e.g. rel, time, etc.)
-		$args_regex_fragment = '(?:\?(?P<arguments>.+?))?';
 
 		$regexes = array(
 			// Something like: https://www.youtube.com/watch?v=lsSC2vx7zFQ
 			"url_regex" =>
 				'~^' . 
-					$protocol_regex_fragment . 
+					$this->regex_fragments['protocol'] . 
 					'(?P<domain>(?:www\.)?youtube\.com)/watch\?v=' . 
-					$video_id_regex_fragment .
+					$this->regex_fragments['video_id'] .
 				'~i', 
 
 			// Something like "http://youtu.be/lsSC2vx7zFQ" or "http://youtu.be/6jCNXASjzMY?t=3m11s"
 			"share_url_regex" =>
 				'~^' .
-					$protocol_regex_fragment .
+					$this->regex_fragments['protocol'] . 
 					'youtu\.be/' .
-					$video_id_regex_fragment .
-					$args_regex_fragment . 
+					$this->regex_fragments['video_id'] .
+					$this->regex_fragments['args'] .
 				'$~i',
 
 			// Youtube embed iframe code: 
@@ -171,22 +201,22 @@ class Carbon_VideoYoutube extends Carbon_Video {
 			"embed_code_regex" =>
 				'~^'.
 					'<iframe.*?src=[\'"]' .
-					$protocol_regex_fragment .
+					$this->regex_fragments['protocol'] . 
 					'(?P<domain>(www\.)?youtube(?:-nocookie)?\.com)/embed/' . 
-					$video_id_regex_fragment .
-					$args_regex_fragment .
+					$this->regex_fragments['video_id'] .
+					$this->regex_fragments['args'] .
 				'[\'"]~i',
 
 			// Youtube old embed flash code:
 			// <object width="234" height="132"><param name="movie" ....
-			// .. type="application/x-shockwave-flash" width="234" height="132" allowscriptaccess="always" allowfullscreen="true"></embed></object>
+			// .. type="application/x-shockwave-flash" width="234" heighGt="132" allowscriptaccess="always" allowfullscreen="true"></embed></object>
 			"old_embed_code_regex" =>
 				'~^'.
 					'<object.*?' .
-					$protocol_regex_fragment .
+					$this->regex_fragments['protocol'] . 
 					'(?P<domain>(www\.)?youtube(?:-nocookie)?\.com)/v/' . 
-					$video_id_regex_fragment .
-					$args_regex_fragment . 
+					$this->regex_fragments['video_id'] .
+					$this->regex_fragments['args'] .
 				'[\'"]~i'
 		);
 

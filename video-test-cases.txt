@@ -40,14 +40,15 @@ http://youtu.be/6jCNXASjzMY?t=15s
 
    ---- Vimeo
 
-// Share URL
 http://vimeo.com/2526536
+http://vimeo.com/channels/staffpicks/98861259
 
 // Share URL with start time 00:15
 http://vimeo.com/2526536#t=15s
 
 // Share URL with start time 03:15
 http://vimeo.com/2526536#t=195s
+/**/
 
 // Embed
 <iframe src="//player.vimeo.com/video/2526536?title=0&amp;byline=0&amp;portrait=0" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
@@ -66,3 +67,5 @@ http://vimeo.com/2526536#t=195s
 <iframe src="//player.vimeo.com/video/2526536?title=0&amp;byline=0&amp;color=ffffff" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p>Work I did for SC2GG website. A community for Startcraft II from Blizzard Entertainment</p>
 
 /* old embed code*/
+
+

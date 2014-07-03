@@ -28,13 +28,13 @@ class YoutubeOldEmbedConstructionTest extends PHPUnit_Framework_TestCase {
 			'<iframe width="420" height="315" src="//www.youtube-nocookie.com/embed/6jCNXASjzMY?rel=0" frameborder="0" allowfullscreen></iframe>'
 		);
 	}
+	
 	function testFlashEmbedCode() {
 		$this->assertEquals(
 			$this->video->get_flash_embed_code(),
 			$this->orig_html
 		);
 	}
-	
 
 	function testShareLink() {
 		$this->assertEquals($this->video->get_share_link(), '//youtu.be/6jCNXASjzMY');

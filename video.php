@@ -12,6 +12,12 @@ abstract class Carbon_Video {
 
 	protected $arguments = array();
 
+	/**
+	 * The time that video should start
+	 * @var boolean|integer
+	 */
+	protected $start_time = false;
+
 	protected $regex_fragments = array(
 		// Describe "http://" or "https://" or "//"
 		"protocol" => '(?:https?:)?//',
@@ -57,7 +63,7 @@ abstract class Carbon_Video {
 	abstract public function get_flash_embed_code($width=null, $height=null);
 
 	function __construct() {
-		
+
 	}
 
 	public function get_width() {
@@ -96,6 +102,10 @@ abstract class Carbon_Video {
 		return $this->video_id;
 	}
 
+	function get_start_time() {
+		return $this->start_time;
+	}
+
 	// If width and height are not provided in the function parameters,
 	// get them from the initial video code; if the object wasn't constructed
 	// from an embed code(and doesn't have initial width and height), use 
@@ -125,8 +135,44 @@ abstract class Carbon_Video {
 class Carbon_Video_Exception extends Exception {}
 
 class Carbon_VideoVimeo extends Carbon_Video {
+	function __construct() {
+		$this->regex_fragments = array_merge($this->regex_fragments, array(
+			'video_id'=>'(?P<video_id>\d+)'
+		));
+	}
+
 	function parse($video_code) {
-		// $regex
+		$regexes = array(
+			// Matches:
+			//  - http://vimeo.com/2526536
+			//  - http://vimeo.com/channels/staffpicks/98861259
+			//  - http://vimeo.com/2526536#t=15s
+			//  - http://vimeo.com/2526536#t=195s
+			"url_regex" =>
+				'~^' . 
+					$this->regex_fragments['protocol'] . 
+					'vimeo\.com/.*?/?' . 
+					$this->regex_fragments['video_id'] .
+					'(?:#t=(?P<start>\d+)s)?' .
+				'$~i', 
+		);
+
+		foreach ($regexes as $regex_type => $regex) {
+			if (preg_match($regex, $video_code, $matches)) {
+				$this->video_id = $matches['video_id'];
+
+				if (!empty($matches['start'])) {
+					$this->start_time = $matches['start'];
+				}
+				
+				break;
+			}
+		}
+
+		if (empty($this->video_id)) {
+			return false;
+		}
+		return true;
 	}
 	function get_thumbnail() {
 
@@ -143,9 +189,6 @@ class Carbon_VideoVimeo extends Carbon_Video {
 	function get_flash_embed_code($width=null, $height=null) {
 
 	}
-	function get_id() {
-
-	}
 }
 class Carbon_VideoYoutube extends Carbon_Video {
 	/**
@@ -159,16 +202,10 @@ class Carbon_VideoYoutube extends Carbon_Video {
 	 */
 	public $domain = self::DEFAULT_DOMAIN;
 
-	/**
-	 * The time that video should start
-	 * @var boolean|integer
-	 */
-	protected $shortlink_start = false;
-	
 	function __construct() {
 		$this->regex_fragments = array_merge($this->regex_fragments, array(
 			// Desribe youtube video ID 
-			"video_id" => '(?P<video_id>[\w\-]*)',
+			"video_id" => '(?P<video_id>[\w\-]+)',
 		));
 		parent::__construct();
 	}
@@ -177,7 +214,6 @@ class Carbon_VideoYoutube extends Carbon_Video {
 	 * Constructs new object from various video inputs. 
 	 */
 	function parse($video) {
-
 		$regexes = array(
 			// Something like: https://www.youtube.com/watch?v=lsSC2vx7zFQ
 			"url_regex" =>
@@ -283,13 +319,13 @@ class Carbon_VideoYoutube extends Carbon_Video {
 		// and it's translated differently to embed code arguments
 		// (see https://developers.google.com/youtube/player_parameters#start)
 		if ($arg === 't') {
-			$this->shortlink_start = $val;
+			$this->start_time = $val;
 			
 			$arg = 'start';
 			$val = $this->calc_time_in_seconds($val);
 
 		} else if ($arg === 'start') {
-			$this->shortlink_start = $this->calc_shortlink_time($val);
+			$this->start_time = $this->calc_shortlink_time($val);
 		}
 
 		parent::set_argument($arg, $val);
@@ -301,8 +337,8 @@ class Carbon_VideoYoutube extends Carbon_Video {
 		$url = '//youtu.be/' . $this->video_id;
 		$time = $this->get_argument('t');
 
-		if ($this->shortlink_start) {
-			$url .= '?t=' . $this->shortlink_start;
+		if ($this->start_time) {
+			$url .= '?t=' . $this->start_time;
 		}
 
 		return $url;
@@ -312,8 +348,8 @@ class Carbon_VideoYoutube extends Carbon_Video {
 		$url = '//' . self::DEFAULT_DOMAIN . '/watch?v=' . $this->video_id;
 		$time = $this->get_argument('t');
 
-		if ($this->shortlink_start) {
-			$url .= '?t=' . $this->shortlink_start;
+		if ($this->start_time) {
+			$url .= '?t=' . $this->start_time;
 		}
 
 		return $url;

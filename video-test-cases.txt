@@ -68,4 +68,4 @@ http://vimeo.com/2526536#t=195s
 
 /* old embed code*/
 
-
+<!-- This version of the embed code is no longer supported. Learn more: https://vimeo.com/s/tnm --> <object width="500" height="213"><param name="allowfullscreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="movie" value="http://vimeo.com/moogaloop.swf?clip_id=99401340&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=c9ff23&amp;fullscreen=1&amp;autoplay=1&amp;loop=1" /><embed src="http://vimeo.com/moogaloop.swf?clip_id=99401340&amp;force_embed=1&amp;server=vimeo.com&amp;show_title=0&amp;show_byline=0&amp;show_portrait=0&amp;color=c9ff23&amp;fullscreen=1&amp;autoplay=1&amp;loop=1" type="application/x-shockwave-flash" allowfullscreen="true" allowscriptaccess="always" width="500" height="213"></embed></object>

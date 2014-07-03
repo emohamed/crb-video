@@ -1,5 +1,5 @@
 <?php
-require "video.php";
+require "src/video.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">

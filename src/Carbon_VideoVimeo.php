@@ -136,8 +136,33 @@ class Carbon_VideoVimeo extends Carbon_Video {
 		}
 		return true;
 	}
+	
+	private function get_video_data() {
+		$transient_id = 'vimeo-thumbnail:' . $this->video_id;
+
+		$video_data = get_transient($transient_id);
+
+		if ($video_data === false) {
+			$json = wp_remote_get('http://vimeo.com/api/v2/video/' . $this->video_id . '.json');
+			$video_data = json_decode($json['body']);
+			$video_data = $video_data[0];
+
+			// Set the transient for 30 days. 
+			set_transient($transient_id, $video_data, 30 * 86400);
+		}
+
+		return $video_data;
+	}
+
 	function get_thumbnail() {
-		// TBD -- requires caching
+		$video_data = $this->get_video_data();
+
+		return $video_data->thumbnail_medium;
+	}
+	function get_image() {
+		$video_data = $this->get_video_data();
+
+		return $video_data->thumbnail_large;
 	}
 	
 	function get_share_link() {

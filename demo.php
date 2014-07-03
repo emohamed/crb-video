@@ -41,6 +41,13 @@ require "src/video.php";
 			    ->set_argument('autoplay', 1)
 			    ->get_embed_code();
 		?>
+
+		<h3>Accept Vimeo Embed code and print image</h3>
+		<?php
+			$embed_code = '<iframe src="//player.vimeo.com/video/99401340?title=0&amp;byline=0&amp;portrait=0" width="500" height="213" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
+
+			echo '<img src="' . Carbon_Video::create($embed_code)->get_image() . '" alt="">';
+		?>
 	</div>
 </body>
 </html>

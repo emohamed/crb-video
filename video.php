@@ -81,7 +81,6 @@ abstract class Carbon_Video {
 	abstract public function get_share_link();
 	abstract public function get_link();
 	abstract public function get_embed_code($width=null, $height=null);
-	abstract public function get_flash_embed_code($width=null, $height=null);
 
 	function __construct() {
 
@@ -289,9 +288,6 @@ class Carbon_VideoVimeo extends Carbon_Video {
 	function get_embed_code($width=null, $height=null) {
 
 	}
-	function get_flash_embed_code($width=null, $height=null) {
-
-	}
 }
 class Carbon_VideoYoutube extends Carbon_Video {
 	/**
@@ -472,30 +468,6 @@ class Carbon_VideoYoutube extends Carbon_Video {
 		}
 		
 		return '<iframe width="' . $width . '" height="' . $height . '" src="' . $url . '" frameborder="0" allowfullscreen></iframe>';
-	}
-
-	/**
-	 * Returns flash-based embed code.
-	 */
-	function get_flash_embed_code($width=null, $height=null) {
-		$width = $this->get_embed_width($width);		
-		$height = $this->get_embed_height($height);		
-
-		$url = '//' . $this->domain . '/v/' . $this->video_id;
-
-		$args = array_merge(array(
-			'version'=>'3',
-			'hl'=>'en_US',
-		), $this->arguments);
-
-		$url .= '?' . htmlspecialchars(http_build_query($args));
-		
-		return 
-			'<object width="' . $width . '" height="' . $height . '">' . 
-				'<param name="movie" value="' . $url . '"></param>' . 
-				'<param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param>' . 
-				'<embed src="' . $url . '" type="application/x-shockwave-flash" width="' . $width . '" height="' . $height . '" allowscriptaccess="always" allowfullscreen="true"></embed>' . 
-			'</object>';
 	}
 
 	/**

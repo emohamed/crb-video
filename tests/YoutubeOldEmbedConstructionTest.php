@@ -29,13 +29,6 @@ class YoutubeOldEmbedConstructionTest extends PHPUnit_Framework_TestCase {
 		);
 	}
 	
-	function testFlashEmbedCode() {
-		$this->assertEquals(
-			$this->video->get_flash_embed_code(),
-			$this->orig_html
-		);
-	}
-
 	function testShareLink() {
 		$this->assertEquals($this->video->get_share_link(), '//youtu.be/6jCNXASjzMY');
 	}

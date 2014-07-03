@@ -16,10 +16,6 @@ require "video.php";
 		<h3>Accept Youtube URL, produce HTML5 Embed with 640 x 480</h3>
 		<?php echo Carbon_Video::create("https://www.youtube.com/watch?v=n4RjJKxsamQ")->get_embed_code(640, 480); ?>
 
-		<h3>Accept Youtube URL, produce Flash Embed 640 x 480</h3>
-		<?php echo Carbon_Video::create("https://www.youtube.com/watch?v=n4RjJKxsamQ")->get_flash_embed_code(640, 480);
-		?>
-
 		<h3>Accept Youtube URL, produce embed without related videos</h3>
 		<?php echo Carbon_Video::create("https://www.youtube.com/watch?v=n4RjJKxsamQ")->set_argument('rel', 0)->get_embed_code(); ?>
 
@@ -36,13 +32,13 @@ require "video.php";
 		<h3>Accept HTML Embed code and get screenshot</h3>
 		<img src="<?php echo Carbon_Video::create('<iframe width="560" height="315" src="//www.youtube.com/embed/n4RjJKxsamQ?rel=0" frameborder="0" allowfullscreen></iframe>')->get_image(); ?>" alt="">
 
-		<h3>Accept HTML Embed code, remove controls, add autoplay, and print flash embed</h3>
+		<h3>Accept HTML Embed code, remove controls, add autoplay, and print the embed again</h3>
 		<?php
 			$embed_code = '<iframe width="560" height="315" src="//www.youtube.com/embed/n4RjJKxsamQ?rel=0" frameborder="0" allowfullscreen></iframe>';
 
 			echo Carbon_Video::create($embed_code)
 			    ->set_argument('controls', 0)
-			    ->get_flash_embed_code();
+			    ->get_embed_code();
 		?>
 	</div>
 </body>

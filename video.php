@@ -1,5 +1,5 @@
 <?php
-abstract class Crb_Video {
+abstract class Carbon_Video {
 	const DEFAULT_WIDTH = 640;
 	const DEFAULT_HEIGHT = 480;
 
@@ -17,23 +17,23 @@ abstract class Crb_Video {
 	 * Parses embed code, url, or video ID and creates new object based on it. 
 	 * 
 	 * @param string $video embed code, url, or video ID
-	 * @return object Crb_Video
+	 * @return object Carbon_Video
 	 **/
 	static function create($video) {
 		$video = trim($video);
 
 		// Try to catch youtube.com, youtu.be, youtube-nocookie.com
 		if (preg_match('~(https?:)?//(www\.)?(youtube(-nocookie)?\.com|youtu\.be)~i', $video)) {
-			return new Crb_VideoYoutube($video);
+			return new Carbon_VideoYoutube($video);
 
 		}
 
 		// Try to catch vimeo
 		if (preg_match('~(https?:)?//(www.|)(vimeo\.com)~i', $video)) { 
-			return new Crb_VideoVimeo($video);
+			return new Carbon_VideoVimeo($video);
 		}
 
-		throw new Crb_Video_Exception("Can't recognize video: $video");
+		throw new Carbon_Video_Exception("Can't recognize video: $video");
 	}
 
 	abstract function get_thumbnail();
@@ -157,9 +157,9 @@ abstract class Crb_Video {
 	}
 }
 
-class Crb_Video_Exception extends Exception {}
+class Carbon_Video_Exception extends Exception {}
 
-class Crb_VideoYoutube extends Crb_Video {
+class Carbon_VideoYoutube extends Carbon_Video {
 	/**
 	 * The original domain name of the video: either youtube.com or youtube-nocookies.com
 	 * @var string
@@ -275,7 +275,7 @@ class Crb_VideoYoutube extends Crb_Video {
 		}
 
 		if (!isset($this->video_id)) {
-			throw new Crb_Video_Exception("Couldn't parse video input. ");
+			throw new Carbon_Video_Exception("Couldn't parse video input. ");
 		}
 	}
 	/**

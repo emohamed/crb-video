@@ -1,15 +1,32 @@
 <?php
 abstract class Carbon_Video {
-	const DEFAULT_WIDTH = 640;
-	const DEFAULT_HEIGHT = 480;
+	/**
+	 * The default width and height for videos, used when the object isn't 
+	 * constructed from embed code and doesn't have partuclar initial dimensions
+	 * and embed code must be built out from the video ID. 
+	 */
+	const DEFAULT_WIDTH = '100%';
+	const DEFAULT_HEIGHT = '';
 
+	/**
+	 * Width and height container
+	 * @var array
+	 */
 	protected $dimensions = array(
 		'width'=>null,
 		'height'=>null
 	);
 
+	/**
+	 * The ID of the video in the site that hosts it
+	 * @var string
+	 */
 	protected $video_id;
 
+	/**
+	 * URL GET arguments. 
+	 * @var array
+	 */
 	protected $arguments = array();
 
 	/**
@@ -18,6 +35,10 @@ abstract class Carbon_Video {
 	 */
 	protected $start_time = false;
 
+	/**
+	 * Commonly used fragments in the regular expressions that parse
+	 * @var array
+	 */
 	protected $regex_fragments = array(
 		// Describe "http://" or "https://" or "//"
 		"protocol" => '(?:https?:)?//',
@@ -40,7 +61,7 @@ abstract class Carbon_Video {
 		// Try to catch youtube.com, youtu.be, youtube-nocookie.com
 		if (preg_match('~(https?:)?//(www\.)?(youtube(-nocookie)?\.com|youtu\.be)~i', $video_code)) {
 			$video = new Carbon_VideoYoutube();
-		} elseif (preg_match('~(https?:)?//(www.|)(vimeo\.com)~i', $video_code)) { 
+		} elseif (preg_match('~(https?:)?//[\w.]*vimeo\.com~i', $video_code)) { 
 			$video = new Carbon_VideoVimeo();
 		} else {
 			return false;
@@ -155,17 +176,55 @@ class Carbon_VideoVimeo extends Carbon_Video {
 					$this->regex_fragments['video_id'] .
 					'(?:#t=(?P<start>\d+)s)?' .
 				'$~i', 
-		);
 
+			// Matches iframe based embed code
+			"embed_code_regex" =>
+				'~^' . 
+					'<iframe.*?src=[\'"]' . 
+					$this->regex_fragments['protocol'] . 
+					'player\.vimeo\.com/video/' . 
+					$this->regex_fragments['video_id'] . 
+					$this->regex_fragments['args'] . 
+				'[\'"]~i',
+		);
+		$video_input_type = false;
 		foreach ($regexes as $regex_type => $regex) {
 			if (preg_match($regex, $video_code, $matches)) {
+				$video_input_type = $regex_type;
 				$this->video_id = $matches['video_id'];
 
+				// Start in vimeo is in the hash rather than in GET argument, so
+				// it's handled differently from youtube's start argument. 
 				if (!empty($matches['start'])) {
 					$this->start_time = $matches['start'];
 				}
-				
+
+				if (isset($matches['arguments'])) {
+					// & in the URLs is encoded as &amp;, so fix that before parsing
+					$args = htmlspecialchars_decode($matches['arguments']);
+					parse_str($args, $arguments);
+
+					foreach ($arguments as $arg_name => $arg_val) {
+						$this->set_argument($arg_name, $arg_val);
+					}
+				}
+
 				break;
+			}
+		}
+
+		// For embed codes, width and height should be extracted
+		$is_embed_code = in_array($video_input_type, array(
+			'embed_code_regex',
+			'old_embed_code_regex'
+		));
+
+		if ($is_embed_code) {
+			if (preg_match_all('~(?P<dimension>width|height)=[\'"](?P<val>\d+)[\'"]~', $video_code, $matches)) {
+				$this->dimensions = array_combine(
+					$matches['dimension'],
+					$matches['val']
+				);
 			}
 		}
 
@@ -213,7 +272,7 @@ class Carbon_VideoYoutube extends Carbon_Video {
 	/**
 	 * Constructs new object from various video inputs. 
 	 */
-	function parse($video) {
+	function parse($video_code) {
 		$regexes = array(
 			// Something like: https://www.youtube.com/watch?v=lsSC2vx7zFQ
 			"url_regex" =>
@@ -260,7 +319,7 @@ class Carbon_VideoYoutube extends Carbon_Video {
 		$video_input_type = null;
 
 		foreach ($regexes as $regex_type => $regex) {
-			if (preg_match($regex, $video, $matches)) {
+			if (preg_match($regex, $video_code, $matches)) {
 				$video_input_type = $regex_type;
 				$this->video_id = $matches['video_id'];
 
@@ -295,7 +354,7 @@ class Carbon_VideoYoutube extends Carbon_Video {
 		));
 
 		if ($is_embed_code) {
-			if (preg_match_all('~(?P<dimension>width|height)=[\'"](?P<val>\d+)[\'"]~', $video, $matches)) {
+			if (preg_match_all('~(?P<dimension>width|height)=[\'"](?P<val>\d+)[\'"]~', $video_code, $matches)) {
 				$this->dimensions = array_combine(
 					$matches['dimension'],
 					$matches['val']

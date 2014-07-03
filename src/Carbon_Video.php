@@ -28,7 +28,7 @@ abstract class Carbon_Video {
 	protected $start_time = false;
 
 	/**
-	 * Commonly used fragments in the regular expressions that parse
+	 * Commonly used fragments in the regular expressions
 	 * @var array
 	 */
 	protected $regex_fragments = array(
@@ -50,19 +50,26 @@ abstract class Carbon_Video {
 
 		$video = null;
 
-		// Try to catch youtube.com, youtu.be, youtube-nocookie.com
-		if (preg_match('~(https?:)?//(www\.)?(youtube(-nocookie)?\.com|youtu\.be)~i', $video_code)) {
-			$video = new Carbon_VideoYoutube();
-		} elseif (preg_match('~(https?:)?//[\w.]*vimeo\.com~i', $video_code)) { 
-			$video = new Carbon_VideoVimeo();
-		} else {
-			return false;
+		$video_providers = array("Youtube", "Vimeo");
+
+		foreach ($video_providers as $video_provider) {
+			$class_name = "Carbon_Video$video_provider";
+
+			if (call_user_func(array($class_name, 'test'), $video_code)) {
+				$video = new $class_name();
+				break;
+			}
+		}
+
+		if (is_null($video)) {
+			throw new Carbon_Video_Exception("Unable to find provider for video: " . $video_code);
 		}
 
 		$result = $video->parse($video_code);
+
 		if (!$result) {
 			// Couldn't parse the video code. 
-			return false;
+			throw new Carbon_Video_Exception("Unable to parse video code: " . $video_code);
 		}
 
 		return $video;

@@ -4,6 +4,17 @@ class Carbon_VideoVimeo extends Carbon_Video {
 	protected $default_width  = '500';
 	protected $default_height = '281';
 
+	/**
+	 * Check whether video code looks remotely like vimeo link or embed code. 
+	 * Returning true here doesn't guarantee that the code will be actually paraseable. 
+	 * 
+	 * @param  string $video_code
+	 * @return boolean
+	 */
+	static function test($video_code) {
+		return preg_match('~(https?:)?//[\w.]*vimeo\.com~i', $video_code);
+	}
+
 	function __construct() {
 		$this->regex_fragments = array_merge($this->regex_fragments, array(
 			'video_id'=>'(?P<video_id>\d+)'

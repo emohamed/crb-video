@@ -14,6 +14,17 @@ class Carbon_VideoYoutube extends Carbon_Video {
 	 */
 	public $domain = self::DEFAULT_DOMAIN;
 
+	/**
+	 * Check whether video code looks remotely like youtube link, short link or embed code. 
+	 * Returning true here doesn't guarantee that the code will be actually paraseable. 
+	 * 
+	 * @param  string $video_code
+	 * @return boolean
+	 */
+	static function test($video_code) {
+		return preg_match('~(https?:)?//(www\.)?(youtube(-nocookie)?\.com|youtu\.be)~i', $video_code);
+	}
+
 	function __construct() {
 		$this->regex_fragments = array_merge($this->regex_fragments, array(
 			// Desribe youtube video ID 
@@ -21,6 +32,8 @@ class Carbon_VideoYoutube extends Carbon_Video {
 		));
 		parent::__construct();
 	}
+
+
 
 	/**
 	 * Constructs new object from various video inputs. 

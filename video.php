@@ -18,28 +18,35 @@ abstract class Carbon_Video {
 	 * @param string $video embed code, url, or video ID
 	 * @return object Carbon_Video
 	 **/
-	static function create($video) {
-		$video = trim($video);
+	static function create($video_code) {
+		$video_code = trim($video_code);
+
+		$video = null;
 
 		// Try to catch youtube.com, youtu.be, youtube-nocookie.com
-		if (preg_match('~(https?:)?//(www\.)?(youtube(-nocookie)?\.com|youtu\.be)~i', $video)) {
-			return new Carbon_VideoYoutube($video);
-
+		if (preg_match('~(https?:)?//(www\.)?(youtube(-nocookie)?\.com|youtu\.be)~i', $video_code)) {
+			$video = new Carbon_VideoYoutube();
+		} elseif (preg_match('~(https?:)?//(www.|)(vimeo\.com)~i', $video_code)) { 
+			$video = new Carbon_VideoVimeo();
+		} else {
+			return false;
 		}
 
-		// Try to catch vimeo
-		if (preg_match('~(https?:)?//(www.|)(vimeo\.com)~i', $video)) { 
-			return new Carbon_VideoVimeo($video);
+		$result = $video->parse($video_code);
+		if (!$result) {
+			// Couldn't parse the video code. 
+			return false;
 		}
 
-		throw new Carbon_Video_Exception("Can't recognize video: $video");
+		return $video;
 	}
 
+	abstract function parse($video_code);
 	abstract function get_thumbnail();
 	abstract function get_share_link();
 	abstract function get_link();
-	abstract function get_embed_code();
-	abstract function get_flash_embed_code();
+	abstract function get_embed_code($width=null, $height=null);
+	abstract function get_flash_embed_code($width=null, $height=null);
 
 	public function get_width() {
 		return $this->dimensions['width'];
@@ -127,13 +134,11 @@ class Carbon_VideoYoutube extends Carbon_Video {
 	/**
 	 * Constructs new object from various video inputs. 
 	 */
-	function __construct($video) {
-		// Try to parse the video code in the following order:
-		// Youtube video URL(https://www.youtube.com/watch?v=lsSC2vx7zFQ)
-		// http://youtu.be/lsSC2vx7zFQ
-		// New embed code
-		// Old Embed code ()
+	function __construct() {
 		
+	}
+
+	function parse($video) {
 		// Describe "http://" or "https://" or "//"
 		$protocol_regex_fragment = '(?:https?:)?//';
 
@@ -233,8 +238,9 @@ class Carbon_VideoYoutube extends Carbon_Video {
 		}
 
 		if (!isset($this->video_id)) {
-			throw new Carbon_Video_Exception("Couldn't parse video input. ");
+			return false;
 		}
+		return true;
 	}
 	/**
 	 * Override set_argument in order to catch a special `t` and `start` arguments in youtube:

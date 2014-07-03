@@ -30,4 +30,8 @@ class YoutubeShortLinkConstructionTest extends PHPUnit_Framework_TestCase {
 	function testShareLink() {
 		$this->assertEquals($this->video->get_share_link(), '//youtu.be/KnL2RJZTdA4?t=1m1s');
 	}
+	
+	function testLink() {
+		$this->assertEquals($this->video->get_link(), '//www.youtube.com/watch?v=KnL2RJZTdA4?t=1m1s');
+	}
 }

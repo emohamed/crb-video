@@ -9,7 +9,6 @@ abstract class Carbon_Video {
 	);
 
 	protected $video_id;
-	protected $shortlink_start = false;
 
 	protected $arguments = array();
 
@@ -37,6 +36,8 @@ abstract class Carbon_Video {
 	}
 
 	abstract function get_thumbnail();
+	abstract function get_share_link();
+	abstract function get_link();
 	abstract function get_embed_code();
 	abstract function get_flash_embed_code();
 
@@ -107,10 +108,21 @@ class Carbon_Video_Exception extends Exception {}
 
 class Carbon_VideoYoutube extends Carbon_Video {
 	/**
+	 * The default domain name for youtube videos
+	 */
+	const DEFAULT_DOMAIN = 'www.youtube.com';
+
+	/**
 	 * The original domain name of the video: either youtube.com or youtube-nocookies.com
 	 * @var string
 	 */
-	public $domain = 'www.youtube.com';
+	public $domain = self::DEFAULT_DOMAIN;
+
+	/**
+	 * The time that video should start
+	 * @var boolean|integer
+	 */
+	protected $shortlink_start = false;
 
 	/**
 	 * Constructs new object from various video inputs. 
@@ -231,7 +243,7 @@ class Carbon_VideoYoutube extends Carbon_Video {
 	 *   - `start` is the same thing, but is used as embed code arguments
 	 */
 	function set_argument($arg, $val) {
-		// "t" argument is special case since it's the only one in the shortlinks
+		// "t" argument is special case since it's the only one in the share links
 		// and it's translated differently to embed code arguments
 		// (see https://developers.google.com/youtube/player_parameters#start)
 		if ($arg === 't') {
@@ -250,8 +262,18 @@ class Carbon_VideoYoutube extends Carbon_Video {
 	 * Returns share link for the video, e.g. http://youtu.be/6jCNXASjzMY?t=1s
 	 */
 	function get_share_link() {
-
 		$url = '//youtu.be/' . $this->video_id;
+		$time = $this->get_argument('t');
+
+		if ($this->shortlink_start) {
+			$url .= '?t=' . $this->shortlink_start;
+		}
+
+		return $url;
+	}
+
+	function get_link() {
+		$url = '//' . self::DEFAULT_DOMAIN . '/watch?v=' . $this->video_id;
 		$time = $this->get_argument('t');
 
 		if ($this->shortlink_start) {
@@ -319,7 +341,7 @@ class Carbon_VideoYoutube extends Carbon_Video {
 	 * Calculates how many seconds are there in the string in format "3m2s". 
 	 * @return int seconds
 	 */
-	function calc_time_in_seconds($time) {
+	private function calc_time_in_seconds($time) {
 		if (preg_match('~(?:(?P<minutes>\d+)m)?(?:(?P<seconds>\d+)s)?~', $time, $matches)) {
 			return $matches['minutes'] * 60 + $matches['seconds'];
 		}
@@ -331,7 +353,7 @@ class Carbon_VideoYoutube extends Carbon_Video {
 	 * Transforms seconds to string like "3m2s"
 	 * @return int seconds
 	 */
-	function calc_shortlink_time($seconds) {
+	private function calc_shortlink_time($seconds) {
 		$result = '';
 		if ($seconds > 60) {
 			$result .= floor($seconds / 60) . "m";

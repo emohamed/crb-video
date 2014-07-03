@@ -37,26 +37,8 @@ abstract class Carbon_Video {
 	}
 
 	abstract function get_thumbnail();
-
 	abstract function get_embed_code();
-
-	/**
-	 * Whether a video is autoplay  
-	 *
-	 * @param bool $autoplay
-	 * @return object $this
-	 **/
-	function set_autoplay($autoplay) {
-		$this->autoplay = (bool) $autoplay;
-		return $this;
-	}
-
-	/**
-	 * @return property $autoplay
-	 */
-	function get_autoplay() {
-		return $this->autoplay;
-	}
+	abstract function get_flash_embed_code();
 
 	public function get_width() {
 		return $this->dimensions['width'];

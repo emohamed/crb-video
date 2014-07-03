@@ -57,3 +57,8 @@ echo Carbon_Video::create($embed_code)
     ->get_embed_code();
 ?>
 ```
+
+## TO DO
+ 
+ - Add get_thumbnail for vimeo videos
+ - Write some documentation and add more examples(especially for vimeo)

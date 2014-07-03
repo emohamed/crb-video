@@ -5,8 +5,8 @@ abstract class Carbon_Video {
 	 * constructed from embed code and doesn't have partuclar initial dimensions
 	 * and embed code must be built out from the video ID. 
 	 */
-	const DEFAULT_WIDTH = '100%';
-	const DEFAULT_HEIGHT = '';
+	const DEFAULT_WIDTH  = '640';
+	const DEFAULT_HEIGHT = '360';
 
 	/**
 	 * Width and height container
@@ -186,12 +186,25 @@ class Carbon_VideoVimeo extends Carbon_Video {
 					$this->regex_fragments['video_id'] . 
 					$this->regex_fragments['args'] . 
 				'[\'"]~i',
+
+			// Matches old flash based embed code generated from vimeo
+			"old_embed_code_regex" =>
+				'~'.
+					'<object.*?' .
+					$this->regex_fragments['protocol'] . 
+					'vimeo\.com/moogaloop\.swf' . 
+					$this->regex_fragments['args'] .
+				'[\'"]~i'
 		);
 		$video_input_type = false;
 		foreach ($regexes as $regex_type => $regex) {
 			if (preg_match($regex, $video_code, $matches)) {
 				$video_input_type = $regex_type;
-				$this->video_id = $matches['video_id'];
+
+				// The video ID is in GET arguments when old embed code is used.
+				if (isset($matches['video_id'])) {
+					$this->video_id = $matches['video_id'];
+				}
 
 				// Start in vimeo is in the hash rather than in GET argument, so
 				// it's handled differently from youtube's start argument. 
@@ -204,7 +217,38 @@ class Carbon_VideoVimeo extends Carbon_Video {
 					$args = htmlspecialchars_decode($matches['arguments']);
 					parse_str($args, $arguments);
 
+					if (isset($arguments['clip_id'])) {
+						$this->video_id = $arguments['clip_id'];
+
+						unset($matches['clip_id']);
+					}
+
+					// These arguments are presented in the old flash embed code, but
+					// aren't used in HTTP
+					$flash_specific_args = array(
+						'force_embed', 'server', 'fullscreen'
+					);
+
+					// Some elements have slightly different names in the flash and HTML
+					// embed code
+					$flash_to_html5_args_map = array(
+						'show_title' => 'title',
+						'show_byline' => 'byline',
+						'show_portrait' => 'portrait',
+					);
+
 					foreach ($arguments as $arg_name => $arg_val) {
+						if (in_array($arg_name, $flash_specific_args)) {
+							// Don't care about those ... 
+							continue; 
+						}
+
+						if (isset($flash_to_html5_args_map[$arg_name])) {
+							// save the HTML argument name rather
+							// than flash's argument name
+							$arg_name = $flash_to_html5_args_map[$arg_name];
+						}
+
 						$this->set_argument($arg_name, $arg_val);
 					}
 				}

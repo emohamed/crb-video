@@ -23,7 +23,7 @@ class YoutubeShortLinkConstructionTest extends PHPUnit_Framework_TestCase {
 	function testEmbedDefalutDimensions() {
 		$this->assertEquals(
 			$this->video->get_embed_code(),
-			'<iframe width="640" height="480" src="//www.youtube.com/embed/KnL2RJZTdA4?start=61" frameborder="0" allowfullscreen></iframe>'
+			'<iframe width="640" height="360" src="//www.youtube.com/embed/KnL2RJZTdA4?start=61" frameborder="0" allowfullscreen></iframe>'
 		);
 	}
 

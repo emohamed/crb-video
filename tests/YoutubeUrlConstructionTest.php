@@ -21,10 +21,10 @@ class YoutubeUrlConstructionTest extends PHPUnit_Framework_TestCase {
 		);
 	}
 
-	function testEmbedDefalutDimensions() {
+	function testEmbedDefaultDimensions() {
 		$this->assertEquals(
 			$this->video->get_embed_code(),
-			'<iframe width="640" height="480" src="//www.youtube.com/embed/lsSC2vx7zFQ" frameborder="0" allowfullscreen></iframe>'
+			'<iframe width="640" height="360" src="//www.youtube.com/embed/lsSC2vx7zFQ" frameborder="0" allowfullscreen></iframe>'
 		);
 	}
 

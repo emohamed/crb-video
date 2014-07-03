@@ -1,14 +1,6 @@
 <?php
 abstract class Carbon_Video {
 	/**
-	 * The default width and height for videos, used when the object isn't 
-	 * constructed from embed code and doesn't have partuclar initial dimensions
-	 * and embed code must be built out from the video ID. 
-	 */
-	const DEFAULT_WIDTH  = '640';
-	const DEFAULT_HEIGHT = '360';
-
-	/**
 	 * Width and height container
 	 * @var array
 	 */
@@ -138,7 +130,7 @@ abstract class Carbon_Video {
 		if (!empty($this->dimensions['width'])) {
 			return $this->dimensions['width'];
 		}
-		return self::DEFAULT_WIDTH;
+		return $this->default_width;
 	}
 
 	function get_embed_height($user_supplied_height) {
@@ -148,13 +140,16 @@ abstract class Carbon_Video {
 		if (!empty($this->dimensions['height'])) {
 			return $this->dimensions['height'];
 		}
-		return self::DEFAULT_HEIGHT;
+		return $this->default_height;
 	}
 }
 
 class Carbon_Video_Exception extends Exception {}
 
 class Carbon_VideoVimeo extends Carbon_Video {
+	protected $default_width  = '500';
+	protected $default_height = '281';
+
 	function __construct() {
 		$this->regex_fragments = array_merge($this->regex_fragments, array(
 			'video_id'=>'(?P<video_id>\d+)'
@@ -277,19 +272,38 @@ class Carbon_VideoVimeo extends Carbon_Video {
 		return true;
 	}
 	function get_thumbnail() {
-
+		// TBD -- requires caching
 	}
+	
 	function get_share_link() {
-
+		return $this->get_link();
 	}
+
 	function get_link() {
-
+		$url = "//vimeo.com/" . $this->video_id;
+		if (isset($this->start_time)) {
+			$url .= "#" . $this->start_time . "s";
+		}
+		return $url;
 	}
-	function get_embed_code($width=null, $height=null) {
 
+	function get_embed_code($width=null, $height=null) {
+		$width = $this->get_embed_width($width);
+		$height = $this->get_embed_height($height);
+
+		$url = '//player.vimeo.com/video/' . $this->video_id;
+
+		if (!empty($this->arguments)) {
+			$url .= '?' . htmlspecialchars(http_build_query($this->arguments));
+		}
+		
+		return '<iframe src="' . $url . '" width="' . $width . '" height="' . $height . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
 	}
 }
 class Carbon_VideoYoutube extends Carbon_Video {
+	protected $default_width = '640';
+	protected $default_height = '360';
+
 	/**
 	 * The default domain name for youtube videos
 	 */
@@ -458,8 +472,8 @@ class Carbon_VideoYoutube extends Carbon_Video {
 	 * Returns iframe-based embed code.
 	 */
 	function get_embed_code($width=null, $height=null) {
-		$width = $this->get_embed_width($width);		
-		$height = $this->get_embed_height($height);		
+		$width = $this->get_embed_width($width);
+		$height = $this->get_embed_height($height);
 
 		$url = '//' . $this->domain . '/embed/' . $this->video_id;
 

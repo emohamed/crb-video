@@ -86,47 +86,11 @@ abstract class Carbon_Video {
 	}
 
 	function set_argument($arg, $val) {
-		// "t" argument is special case since it's the only one in the shortlinks
-		// and it's translated differently to embed code arguments
-		// (see https://developers.google.com/youtube/player_parameters#start)
-		if ($arg === 't') {
-			$this->shortlink_start = $val;
-			
-			$arg = 'start';
-			$val = $this->calc_time_in_seconds($val);
-
-		} else if ($arg === 'start') {
-			$this->shortlink_start = $this->calc_shortlink_time($val);
-		}
-
 		$this->arguments[$arg] = $val;
 		return $this;
 	}
 
-	/**
-	 * Calculates how many seconds are there in the string in format "3m2s". 
-	 * @return int seconds
-	 */
-	function calc_time_in_seconds($time) {
-		if (preg_match('~(?:(?P<minutes>\d+)m)?(?:(?P<seconds>\d+)s)?~', $time, $matches)) {
-			return $matches['minutes'] * 60 + $matches['seconds'];
-		}
-		// Doesn't match the format...
-		return null;
-	}
-
-	/**
-	 * Transforms seconds to string like "3m2s"
-	 * @return int seconds
-	 */
-	function calc_shortlink_time($seconds) {
-		$result = '';
-		if ($seconds > 60) {
-			$result .= floor($seconds / 60) . "m";
-		}
-		return $result . ($seconds % 60) . "s";
-	}
-
+	
 	function get_id() {
 		return $this->video_id;
 	}
@@ -279,6 +243,28 @@ class Carbon_VideoYoutube extends Carbon_Video {
 		}
 	}
 	/**
+	 * Override set_argument in order to catch a special `t` and `start` arguments in youtube:
+	 *   - `t` argument is optional for share shortened links and is in format "3m2s" -- that is 
+	 *     start playback 3 minutes and 2 seconds
+	 *   - `start` is the same thing, but is used as embed code arguments
+	 */
+	function set_argument($arg, $val) {
+		// "t" argument is special case since it's the only one in the shortlinks
+		// and it's translated differently to embed code arguments
+		// (see https://developers.google.com/youtube/player_parameters#start)
+		if ($arg === 't') {
+			$this->shortlink_start = $val;
+			
+			$arg = 'start';
+			$val = $this->calc_time_in_seconds($val);
+
+		} else if ($arg === 'start') {
+			$this->shortlink_start = $this->calc_shortlink_time($val);
+		}
+
+		parent::set_argument($arg, $val);
+	}
+	/**
 	 * Returns share link for the video, e.g. http://youtu.be/6jCNXASjzMY?t=1s
 	 */
 	function get_share_link() {
@@ -346,4 +332,29 @@ class Carbon_VideoYoutube extends Carbon_Video {
 	function get_thumbnail() {
 		return '//img.youtube.com/vi/' . $this->video_id . '/default.jpg';
 	}
+
+	/**
+	 * Calculates how many seconds are there in the string in format "3m2s". 
+	 * @return int seconds
+	 */
+	function calc_time_in_seconds($time) {
+		if (preg_match('~(?:(?P<minutes>\d+)m)?(?:(?P<seconds>\d+)s)?~', $time, $matches)) {
+			return $matches['minutes'] * 60 + $matches['seconds'];
+		}
+		// Doesn't match the format...
+		return null;
+	}
+
+	/**
+	 * Transforms seconds to string like "3m2s"
+	 * @return int seconds
+	 */
+	function calc_shortlink_time($seconds) {
+		$result = '';
+		if ($seconds > 60) {
+			$result .= floor($seconds / 60) . "m";
+		}
+		return $result . ($seconds % 60) . "s";
+	}
+
 }

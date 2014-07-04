@@ -37,6 +37,15 @@ class Carbon_VideoVimeo extends Carbon_Video {
 					'(?:#t=(?P<start>\d+)s)?' .
 				'$~i', 
 
+			// Matches embed code direct link: http://player.vimeo.com/video/98861259
+			"embed_direct_link_regex" =>
+				'~^' . 
+					$this->regex_fragments['protocol'] . 
+					'player\.vimeo\.com/video/' . 
+					$this->regex_fragments['video_id'] . 
+					$this->regex_fragments['args'] . 
+				'$~i',
+
 			// Matches iframe based embed code
 			"embed_code_regex" =>
 				'~^' . 

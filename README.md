@@ -28,6 +28,7 @@ You can create new objects from various formats:
  * URLs: `https://www.youtube.com/watch?v=tIdIqbv7SPo` or `http://vimeo.com/99541639`
  * share links: `http://youtu.be/tIdIqbv7SPo`
  * embed code: `<iframe width="420" height="315" src="//www.youtube.com/embed/tIdIqbv7SPo?rel=0" frameborder="0" allowfullscreen></iframe>`
+ * embed direct links: `//www.youtube.com/embed/tIdIqbv7SPo?rel=0`
  * old embed code: `<object width="420" height="315"><param name="movie" value="//www.youtube.com/v/tIdIqbv7SPo?version=3&amp;hl=en_US&amp;rel=0"> ... snip ... </object>`
 
 Once created, you can modify the dimensions or the params of the video. Then, you can get various resources of the original video:
@@ -99,6 +100,17 @@ The library understands the "t" param in the shortlinks and translates it to sta
 ```php
 <?php
 $embed_code = 'http://youtu.be/XFkzRNyygfk?t=11s';
+
+echo Carbon_Video::create($embed_code)
+    ->get_embed_code();
+?>
+```
+
+You can also construct objects from direct embed URLs(instead of the whole iframe code). 
+
+```php
+<?php
+$embed_code = '//www.youtube.com/embed/LlhfzIQo-L8?rel=0';
 
 echo Carbon_Video::create($embed_code)
     ->get_embed_code();

@@ -58,6 +58,16 @@ class Carbon_VideoYoutube extends Carbon_Video {
 				'$~i',
 
 			// Youtube embed iframe code: 
+			// //www.youtube.com/embed/LlhfzIQo-L8?rel=0
+			"direct_embed_code_regex" =>
+				'~^'.
+					$this->regex_fragments['protocol'] . 
+					'(?P<domain>(www\.)?youtube(?:-nocookie)?\.com)/(?:embed|v)/' . 
+					$this->regex_fragments['video_id'] .
+					$this->regex_fragments['args'] .
+				'$~i',
+
+			// Youtube embed iframe code: 
 			// <iframe width="560" height="315" src="//www.youtube.com/embed/LlhfzIQo-L8?rel=0" frameborder="0" allowfullscreen></iframe>
 			"embed_code_regex" =>
 				'~'.

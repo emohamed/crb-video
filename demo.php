@@ -56,8 +56,14 @@ require "src/video.php";
 			echo Carbon_Video::create($embed_code)
 			    ->get_embed_code();
 		 ?>
+		
+		<h3>You can also construct objects from direct embed URLs(instead of the whole iframe code)</h3>
+		<?php
+			$embed_code = '//www.youtube.com/embed/LlhfzIQo-L8?rel=0';
 
-
+			echo Carbon_Video::create($embed_code)
+			    ->get_embed_code();
+		?>
 	</div>
 </body>
 </html>

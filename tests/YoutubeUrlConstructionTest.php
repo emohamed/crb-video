@@ -36,5 +36,9 @@ class YoutubeUrlConstructionTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->video->get_thumbnail(), '//img.youtube.com/vi/lsSC2vx7zFQ/default.jpg');
 		$this->assertEquals($this->video->get_image(), '//img.youtube.com/vi/lsSC2vx7zFQ/0.jpg');
 	}
-
+	
+	function testDirectEmbedLinkConstruction() {
+		$video = Carbon_Video::create("//www.youtube.com/embed/LlhfzIQo-L8?rel=0");
+		$this->assertInstanceOf("Carbon_Video", $video);
+	}
 }

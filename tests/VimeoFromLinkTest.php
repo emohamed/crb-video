@@ -28,6 +28,12 @@ class VimeoFromLinkTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(98861259, $video->get_id());
 	}
 
+	function testEmbedUrl() {
+		$video = Carbon_Video::create("http://player.vimeo.com/video/98861259");
+		$this->assertInstanceOf("Carbon_Video", $video);
+		$this->assertEquals(98861259, $video->get_id());
+	}
+
 	function testLinkWithStartTime() {
 		$video = Carbon_Video::create("http://vimeo.com/2526536#t=15s");
 		$this->assertInstanceOf("Carbon_Video", $video);

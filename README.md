@@ -110,37 +110,37 @@ echo Carbon_Video::create($embed_code)
 <table>
     <tr>
         <th><code>set_param($arg, $val)</code></th>
-        <td>Sets GET param of the embed source. Here is a reference for the Youtube parameters: <https://developers.google.com/youtube/player_parameters#Parameters>. Here is a reference for Vimeo arguments: <http://developer.vimeo.com/player/embedding#universal-parameters></td>
+        <td>Sets GET param of the embed source. Here is a [reference for the Youtube parameters](https://developers.google.com/youtube/player_parameters#Parameters). Here is a [reference for Vimeo parameters](http://developer.vimeo.com/player/embedding#universal-parameters). </td>
     </tr>
 
     <tr>
         <th><code>get_param($arg)</code></th>
-        <td>Reads a parameter from the parsed initial code. </td>
+        <td>Returns a parameter value. </td>
     </tr>
 
     <tr>
         <th><code>get_width()</code></th>
-        <td>Returns the current width of the player. </td>
+        <td>Returns the current width of the embed. </td>
     </tr>
 
     <tr>
         <th><code>set_width($new_width)</code></th>
-        <td>Updates the width of the player. </td>
+        <td>Updates the width of the embed. </td>
     </tr>
 
     <tr>
         <th><code>get_height()</code></th>
-        <td>Returns the current height of the player. </td>
+        <td>Returns the current height of the embed. </td>
     </tr>
 
     <tr>
         <th><code>set_height($new_height)</code></th>
-        <td>Updates the height of the player. </td>
+        <td>Updates the height of the embed. </td>
     </tr>
 
     <tr>
         <th><code>get_link()</code></th>
-        <td>Return perma link for the player. </td>
+        <td>Return permalink for the video. </td>
     </tr>
 
     <tr>
@@ -150,7 +150,7 @@ echo Carbon_Video::create($embed_code)
 
     <tr>
         <th><code>get_embed_code([$embed_width[, $embed_height]])</code></th>
-        <td>Generates HTML iframe markup for the obejct. </td>
+        <td>Generates HTML iframe markup for the object. When width and height are provided, the embed will use them; if they're ommited, the embed will obtain it's original values(whenever the object was constructed from embed code). </td>
     </tr>
 
     <tr>

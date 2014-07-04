@@ -60,7 +60,7 @@ class Carbon_VideoYoutube extends Carbon_Video {
 			// Youtube embed iframe code: 
 			// <iframe width="560" height="315" src="//www.youtube.com/embed/LlhfzIQo-L8?rel=0" frameborder="0" allowfullscreen></iframe>
 			"embed_code_regex" =>
-				'~^'.
+				'~'.
 					'<iframe.*?src=[\'"]' .
 					$this->regex_fragments['protocol'] . 
 					'(?P<domain>(www\.)?youtube(?:-nocookie)?\.com)/(?:embed|v)/' . 
@@ -72,7 +72,7 @@ class Carbon_VideoYoutube extends Carbon_Video {
 			// <object width="234" height="132"><param name="movie" ....
 			// .. type="application/x-shockwave-flash" width="234" heighGt="132" allowscriptaccess="always" allowfullscreen="true"></embed></object>
 			"old_embed_code_regex" =>
-				'~^'.
+				'~'.
 					'<object.*?' .
 					$this->regex_fragments['protocol'] . 
 					'(?P<domain>(www\.)?youtube(?:-nocookie)?\.com)/v/' . 

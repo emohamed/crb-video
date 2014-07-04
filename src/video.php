@@ -3,7 +3,7 @@ require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "Carbon_Video.php");
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "Carbon_VideoVimeo.php");
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "Carbon_VideoYoutube.php");
 
-// Some dependencies from WordPress when the code doesn't run in WordPress envoirement
+// Some dependencies from WordPress when the code doesn't run in WordPress environment
 if (!class_exists('WP_Query')) {
 	function get_transient($transient) {
 		return false;

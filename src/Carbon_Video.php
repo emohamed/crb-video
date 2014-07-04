@@ -153,6 +153,7 @@ abstract class Carbon_Video {
 		foreach ($params as $param_name=>$param_val) {
 			$this->set_param($param_name, $param_val);
 		}
+		return $this;
 	}
 
 	// If width and height are not provided in the function parameters,

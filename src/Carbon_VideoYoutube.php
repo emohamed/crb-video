@@ -33,8 +33,6 @@ class Carbon_VideoYoutube extends Carbon_Video {
 		parent::__construct();
 	}
 
-
-
 	/**
 	 * Constructs new object from various video inputs. 
 	 */
@@ -189,7 +187,15 @@ class Carbon_VideoYoutube extends Carbon_Video {
 
 		return $url;
 	}
+	function get_embed_url() {
+		$url = '//' . $this->domain . '/embed/' . $this->video_id;
 
+		if (!empty($this->params)) {
+			$url .= '?' . htmlspecialchars(http_build_query($this->params));
+		}
+
+		return $url;
+	}
 	/**
 	 * Returns iframe-based embed code.
 	 */
@@ -197,13 +203,7 @@ class Carbon_VideoYoutube extends Carbon_Video {
 		$width = $this->get_embed_width($width);
 		$height = $this->get_embed_height($height);
 
-		$url = '//' . $this->domain . '/embed/' . $this->video_id;
-
-		if (!empty($this->params)) {
-			$url .= '?' . htmlspecialchars(http_build_query($this->params));
-		}
-		
-		return '<iframe width="' . $width . '" height="' . $height . '" src="' . $url . '" frameborder="0" allowfullscreen></iframe>';
+		return '<iframe width="' . $width . '" height="' . $height . '" src="' . $this->get_embed_url() . '" frameborder="0" allowfullscreen></iframe>';
 	}
 
 	/**

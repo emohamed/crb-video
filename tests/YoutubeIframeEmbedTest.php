@@ -61,4 +61,11 @@ class YoutubeIframeEmbedTest extends PHPUnit_Framework_TestCase {
 			'<iframe width="100" height="200" src="//www.youtube.com/embed/6jCNXASjzMY?rel=0" frameborder="0" allowfullscreen></iframe>'
 		);
 	}
+
+	function testEmbedDirectUrl() {
+		$this->assertEquals(
+			'//www.youtube.com/embed/6jCNXASjzMY?rel=0',
+			$this->video->get_embed_url()
+		);
+	}
 }

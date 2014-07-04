@@ -91,6 +91,11 @@ abstract class Carbon_Video {
 	abstract public function parse($video_code);
 	abstract public function get_link();
 	abstract public function get_share_link();
+	/**
+	 * Return direct URL to the iframe embed(without the iframe tag HTML)
+	 * @return string URL to youtube embed
+	 */
+	abstract public function get_embed_url();
 	abstract public function get_embed_code($width=null, $height=null);
 	abstract public function get_thumbnail();
 

@@ -189,17 +189,19 @@ class Carbon_VideoVimeo extends Carbon_Video {
 		}
 		return $url;
 	}
-
-	function get_embed_code($width=null, $height=null) {
-		$width = $this->get_embed_width($width);
-		$height = $this->get_embed_height($height);
-
+	function get_embed_url() {
 		$url = '//player.vimeo.com/video/' . $this->video_id;
 
 		if (!empty($this->params)) {
 			$url .= '?' . htmlspecialchars(http_build_query($this->params));
 		}
+
+		return $url;
+	}
+	function get_embed_code($width=null, $height=null) {
+		$width = $this->get_embed_width($width);
+		$height = $this->get_embed_height($height);
 		
-		return '<iframe src="' . $url . '" width="' . $width . '" height="' . $height . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
+		return '<iframe src="' . $this->get_embed_url() . '" width="' . $width . '" height="' . $height . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
 	}
 }

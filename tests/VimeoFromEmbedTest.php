@@ -31,6 +31,8 @@ class VimeoFromEmbedTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals('500', $video->get_width());
 		$this->assertEquals('213', $video->get_height());
+
+		$this->assertEquals('//player.vimeo.com/video/99401340?title=0&amp;byline=0&amp;portrait=0&amp;color=c9ff23&amp;autoplay=1&amp;loop=1', $video->get_embed_url());
 	}
 	
 }

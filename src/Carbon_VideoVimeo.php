@@ -147,6 +147,7 @@ class Carbon_VideoVimeo extends Carbon_Video {
 			$api_url = 'http://vimeo.com/api/v2/video/' . $this->video_id . '.json';
 			
 			$json = $this->http->get($api_url);
+
 			$video_data = json_decode($json);
 			$video_data = $video_data[0];
 

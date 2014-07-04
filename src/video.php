@@ -42,5 +42,4 @@ class Carbon_Video_Cache {
 	function get($name) {
 		return get_transient($name);
 	}
-	
 }

@@ -34,7 +34,20 @@ class VimeoFromLinkTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(2526536, $video->get_id());
 		$this->assertEquals(15, $video->get_start_time());
 		
-		$this->assertEquals('http://i.vimeocdn.com/video/86626321_200x150.jpg', $video->get_thumbnail());
+		$vimeo_api_response_file = dirname(__FILE__) . '/data/2526536.json';
+		$vimeo_api_response = file_get_contents($vimeo_api_response_file);
+
+		$http = $this->getMock('Carbon_Video_Http');
+		$http->expects($this->any())
+		     ->method('get')
+		     ->will($this->returnValue($vimeo_api_response));
+
+		$video->http = $http;
+
+		$this->assertEquals(
+			'http://i.vimeocdn.com/video/86626321_200x150.jpg',
+			$video->get_thumbnail()
+		);
 	}
 
 }

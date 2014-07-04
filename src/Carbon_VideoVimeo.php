@@ -19,6 +19,7 @@ class Carbon_VideoVimeo extends Carbon_Video {
 		$this->regex_fragments = array_merge($this->regex_fragments, array(
 			'video_id'=>'(?P<video_id>\d+)'
 		));
+		parent::__construct();
 	}
 
 	function parse($video_code) {
@@ -140,15 +141,17 @@ class Carbon_VideoVimeo extends Carbon_Video {
 	private function get_video_data() {
 		$transient_id = 'vimeo-thumbnail:' . $this->video_id;
 
-		$video_data = get_transient($transient_id);
+		$video_data = $this->cache->get($transient_id);
 
 		if ($video_data === false) {
-			$json = wp_remote_get('http://vimeo.com/api/v2/video/' . $this->video_id . '.json');
-			$video_data = json_decode($json['body']);
+			$api_url = 'http://vimeo.com/api/v2/video/' . $this->video_id . '.json';
+			
+			$json = $this->http->get($api_url);
+			$video_data = json_decode($json);
 			$video_data = $video_data[0];
 
 			// Set the transient for 30 days. 
-			set_transient($transient_id, $video_data, 30 * 86400);
+			$this->cache->set($transient_id, $video_data, 30 * 86400);
 		}
 
 		return $video_data;

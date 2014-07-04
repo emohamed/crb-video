@@ -33,7 +33,7 @@ class VimeoFromLinkTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf("Carbon_Video", $video);
 		$this->assertEquals(2526536, $video->get_id());
 		$this->assertEquals(15, $video->get_start_time());
-
+		
 		$this->assertEquals('http://i.vimeocdn.com/video/86626321_200x150.jpg', $video->get_thumbnail());
 	}
 

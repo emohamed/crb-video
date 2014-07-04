@@ -10,6 +10,18 @@ abstract class Carbon_Video {
 	);
 
 	/**
+	 * Caching object
+	 * @var Carbon_Video_Cache
+	 */
+	public $cache;
+
+	/**
+	 * Http-related object
+	 * @var Carbon_Video_Http
+	 */
+	public $http;
+
+	/**
 	 * The ID of the video in the site that hosts it
 	 * @var string
 	 */
@@ -83,7 +95,8 @@ abstract class Carbon_Video {
 	abstract public function get_thumbnail();
 
 	function __construct() {
-
+		$this->cache = new Carbon_Video_Cache();
+		$this->http = new Carbon_Video_Http();
 	}
 
 	public function get_width() {
@@ -126,6 +139,17 @@ abstract class Carbon_Video {
 		return $this->start_time;
 	}
 
+	/**
+	 * Set multiple parameters in one call
+	 * @param array $params associative array where keys are param
+	 *                      names and values are param values
+	 */
+	public function set_params($params) {
+		foreach ($params as $param_name=>$param_val) {
+			$this->set_param($param_name, $param_val);
+		}
+	}
+
 	// If width and height are not provided in the function parameters,
 	// get them from the initial video code; if the object wasn't constructed
 	// from an embed code(and doesn't have initial width and height), use 
@@ -150,6 +174,7 @@ abstract class Carbon_Video {
 		}
 		return $this->default_height;
 	}
+	
 }
 
 class Carbon_Video_Exception extends Exception {}

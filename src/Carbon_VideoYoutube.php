@@ -63,7 +63,7 @@ class Carbon_VideoYoutube extends Carbon_Video {
 				'~^'.
 					'<iframe.*?src=[\'"]' .
 					$this->regex_fragments['protocol'] . 
-					'(?P<domain>(www\.)?youtube(?:-nocookie)?\.com)/embed/' . 
+					'(?P<domain>(www\.)?youtube(?:-nocookie)?\.com)/(?:embed|v)/' . 
 					$this->regex_fragments['video_id'] .
 					$this->regex_fragments['args'] .
 				'[\'"]~i',

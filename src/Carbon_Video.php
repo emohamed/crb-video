@@ -22,13 +22,13 @@ abstract class Carbon_Video {
 	protected $arguments = array();
 
 	/**
-	 * The time that video should start
+	 * The time that video should start playback at
 	 * @var boolean|integer
 	 */
 	protected $start_time = false;
 
 	/**
-	 * Commonly used fragments in the regular expressions
+	 * Commonly used fragments in the parsing regular expressions
 	 * @var array
 	 */
 	protected $regex_fragments = array(
@@ -75,6 +75,7 @@ abstract class Carbon_Video {
 		return $video;
 	}
 
+	// Abstract methods implemented in each concrete class
 	abstract public function parse($video_code);
 	abstract public function get_thumbnail();
 	abstract public function get_share_link();

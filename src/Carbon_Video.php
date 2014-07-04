@@ -77,10 +77,10 @@ abstract class Carbon_Video {
 
 	// Abstract methods implemented in each concrete class
 	abstract public function parse($video_code);
-	abstract public function get_thumbnail();
-	abstract public function get_share_link();
 	abstract public function get_link();
+	abstract public function get_share_link();
 	abstract public function get_embed_code($width=null, $height=null);
+	abstract public function get_thumbnail();
 
 	function __construct() {
 

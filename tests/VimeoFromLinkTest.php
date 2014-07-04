@@ -37,5 +37,4 @@ class VimeoFromLinkTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('http://i.vimeocdn.com/video/86626321_200x150.jpg', $video->get_thumbnail());
 	}
 
-
 }

@@ -16,10 +16,10 @@ abstract class Carbon_Video {
 	protected $video_id;
 
 	/**
-	 * URL GET arguments. 
+	 * URL GET params. 
 	 * @var array
 	 */
-	protected $arguments = array();
+	protected $params = array();
 
 	/**
 	 * The time that video should start playback at
@@ -36,7 +36,7 @@ abstract class Carbon_Video {
 		"protocol" => '(?:https?:)?//',
 
 		// Describe GET args list
-		"args" => '(?:\?(?P<arguments>.+?))?',
+		"args" => '(?:\?(?P<params>.+?))?',
 	);
 
 	/**
@@ -106,15 +106,15 @@ abstract class Carbon_Video {
 		return $this;
 	}
 
-	function get_argument($arg) {
-		if (isset($this->arguments[$arg])) {
-			return $this->arguments[$arg];
+	function get_param($arg) {
+		if (isset($this->params[$arg])) {
+			return $this->params[$arg];
 		}
 		return null;
 	}
 
-	function set_argument($arg, $val) {
-		$this->arguments[$arg] = $val;
+	function set_param($arg, $val) {
+		$this->params[$arg] = $val;
 		return $this;
 	}
 	

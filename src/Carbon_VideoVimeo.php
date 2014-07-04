@@ -60,29 +60,29 @@ class Carbon_VideoVimeo extends Carbon_Video {
 			if (preg_match($regex, $video_code, $matches)) {
 				$video_input_type = $regex_type;
 
-				// The video ID is in GET arguments when old embed code is used.
+				// The video ID is in GET params when old embed code is used.
 				if (isset($matches['video_id'])) {
 					$this->video_id = $matches['video_id'];
 				}
 
-				// Start in vimeo is in the hash rather than in GET argument, so
-				// it's handled differently from youtube's start argument. 
+				// Start in vimeo is in the hash rather than in GET param, so
+				// it's handled differently from youtube's start param. 
 				if (!empty($matches['start'])) {
 					$this->start_time = $matches['start'];
 				}
 
-				if (isset($matches['arguments'])) {
+				if (isset($matches['params'])) {
 					// & in the URLs is encoded as &amp;, so fix that before parsing
-					$args = htmlspecialchars_decode($matches['arguments']);
-					parse_str($args, $arguments);
+					$args = htmlspecialchars_decode($matches['params']);
+					parse_str($args, $params);
 
-					if (isset($arguments['clip_id'])) {
-						$this->video_id = $arguments['clip_id'];
+					if (isset($params['clip_id'])) {
+						$this->video_id = $params['clip_id'];
 
 						unset($matches['clip_id']);
 					}
 
-					// These arguments are presented in the old flash embed code, but
+					// These params are presented in the old flash embed code, but
 					// aren't used in HTTP
 					$flash_specific_args = array(
 						'force_embed', 'server', 'fullscreen'
@@ -96,19 +96,19 @@ class Carbon_VideoVimeo extends Carbon_Video {
 						'show_portrait' => 'portrait',
 					);
 
-					foreach ($arguments as $arg_name => $arg_val) {
+					foreach ($params as $arg_name => $arg_val) {
 						if (in_array($arg_name, $flash_specific_args)) {
 							// Don't care about those ... 
 							continue; 
 						}
 
 						if (isset($flash_to_html5_args_map[$arg_name])) {
-							// save the HTML argument name rather
-							// than flash's argument name
+							// save the HTML param name rather
+							// than flash's param name
 							$arg_name = $flash_to_html5_args_map[$arg_name];
 						}
 
-						$this->set_argument($arg_name, $arg_val);
+						$this->set_param($arg_name, $arg_val);
 					}
 				}
 
@@ -183,8 +183,8 @@ class Carbon_VideoVimeo extends Carbon_Video {
 
 		$url = '//player.vimeo.com/video/' . $this->video_id;
 
-		if (!empty($this->arguments)) {
-			$url .= '?' . htmlspecialchars(http_build_query($this->arguments));
+		if (!empty($this->params)) {
+			$url .= '?' . htmlspecialchars(http_build_query($this->params));
 		}
 		
 		return '<iframe src="' . $url . '" width="' . $width . '" height="' . $height . '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';

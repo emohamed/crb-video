@@ -15,7 +15,7 @@ class YoutubeStartTimeTransitionTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			62,
-			$video->get_argument('start')
+			$video->get_param('start')
 		);
 
 		$this->assertEquals(
@@ -43,7 +43,7 @@ class YoutubeStartTimeTransitionTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			'75',
-			$video->get_argument('start')
+			$video->get_param('start')
 		);
 
 		$this->assertContains(

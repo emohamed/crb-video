@@ -24,8 +24,8 @@ class YoutubeIframeEmbedTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->video->get_id(), '6jCNXASjzMY');
 	}
 	
-	function testArgumentsExtraction() {
-		$this->assertEquals($this->video->get_argument('rel'), '0');
+	function testparamsExtraction() {
+		$this->assertEquals($this->video->get_param('rel'), '0');
 	}
 
 	function testSharelink() {
@@ -34,7 +34,7 @@ class YoutubeIframeEmbedTest extends PHPUnit_Framework_TestCase {
 
 	function testSharelinkWithTime() {
 		$time = '1m2s';
-		$this->video->set_argument('t', $time);
+		$this->video->set_param('t', $time);
 		$this->assertEquals($this->video->get_share_link(), "//youtu.be/6jCNXASjzMY?t=$time");
 	}
 
@@ -45,8 +45,8 @@ class YoutubeIframeEmbedTest extends PHPUnit_Framework_TestCase {
 		);
 	}
 
-	function testEmbedCodeWithDifferentArgument() {
-		$this->video->set_argument('rel', 1);
+	function testEmbedCodeWithDifferentparam() {
+		$this->video->set_param('rel', 1);
 
 		$this->assertEquals(
 			$this->video->get_embed_code(), 

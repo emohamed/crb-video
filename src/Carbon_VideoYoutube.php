@@ -89,18 +89,18 @@ class Carbon_VideoYoutube extends Carbon_Video {
 				$video_input_type = $regex_type;
 				$this->video_id = $matches['video_id'];
 
-				if (isset($matches['arguments'])) {
+				if (isset($matches['params'])) {
 					// & in the URLs is encoded as &amp;, so fix that before parsing
-					$args = htmlspecialchars_decode($matches['arguments']);
-					parse_str($args, $arguments);
+					$args = htmlspecialchars_decode($matches['params']);
+					parse_str($args, $params);
 
 					if ($video_input_type === 'old_embed_code_regex') {
-						// Those are legacy arguments for the flash player
-						unset($arguments['hl'], $arguments['version']);
+						// Those are legacy params for the flash player
+						unset($params['hl'], $params['version']);
 					}
 
-					foreach ($arguments as $arg_name => $arg_val) {
-						$this->set_argument($arg_name, $arg_val);
+					foreach ($params as $arg_name => $arg_val) {
+						$this->set_param($arg_name, $arg_val);
 					}
 				}
 
@@ -134,14 +134,14 @@ class Carbon_VideoYoutube extends Carbon_Video {
 		return true;
 	}
 	/**
-	 * Override set_argument in order to catch a special `t` and `start` arguments in youtube:
-	 *   - `t` argument is optional for share shortened links and is in format "3m2s" -- that is 
+	 * Override set_param in order to catch a special `t` and `start` params in youtube:
+	 *   - `t` param is optional for share shortened links and is in format "3m2s" -- that is 
 	 *     start playback 3 minutes and 2 seconds
-	 *   - `start` is the same thing, but is used as embed code arguments
+	 *   - `start` is the same thing, but is used as embed code params
 	 */
-	function set_argument($arg, $val) {
-		// "t" argument is special case since it's the only one in the share links
-		// and it's translated differently to embed code arguments
+	function set_param($arg, $val) {
+		// "t" param is special case since it's the only one in the share links
+		// and it's translated differently to embed code params
 		// (see https://developers.google.com/youtube/player_parameters#start)
 		if ($arg === 't') {
 			$this->start_time = $val;
@@ -153,14 +153,14 @@ class Carbon_VideoYoutube extends Carbon_Video {
 			$this->start_time = $this->calc_shortlink_time($val);
 		}
 
-		return parent::set_argument($arg, $val);
+		return parent::set_param($arg, $val);
 	}
 	/**
 	 * Returns share link for the video, e.g. http://youtu.be/6jCNXASjzMY?t=1s
 	 */
 	function get_share_link() {
 		$url = '//youtu.be/' . $this->video_id;
-		$time = $this->get_argument('t');
+		$time = $this->get_param('t');
 
 		if ($this->start_time) {
 			$url .= '?t=' . $this->start_time;
@@ -171,7 +171,7 @@ class Carbon_VideoYoutube extends Carbon_Video {
 
 	function get_link() {
 		$url = '//' . self::DEFAULT_DOMAIN . '/watch?v=' . $this->video_id;
-		$time = $this->get_argument('t');
+		$time = $this->get_param('t');
 
 		if ($this->start_time) {
 			$url .= '?t=' . $this->start_time;
@@ -189,8 +189,8 @@ class Carbon_VideoYoutube extends Carbon_Video {
 
 		$url = '//' . $this->domain . '/embed/' . $this->video_id;
 
-		if (!empty($this->arguments)) {
-			$url .= '?' . htmlspecialchars(http_build_query($this->arguments));
+		if (!empty($this->params)) {
+			$url .= '?' . htmlspecialchars(http_build_query($this->params));
 		}
 		
 		return '<iframe width="' . $width . '" height="' . $height . '" src="' . $url . '" frameborder="0" allowfullscreen></iframe>';

@@ -19,12 +19,12 @@ class VimeoFromOldEmbedTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('500', $video->get_width());
 		$this->assertEquals('213', $video->get_height());
 
-		$this->assertEquals('0', $video->get_argument('byline'));
-		$this->assertEquals('0', $video->get_argument('title'));
-		$this->assertEquals('0', $video->get_argument('portrait'));
-		$this->assertEquals('c9ff23', $video->get_argument('color'));
-		$this->assertEquals('1', $video->get_argument('autoplay'));
-		$this->assertEquals('1', $video->get_argument('loop'));
+		$this->assertEquals('0', $video->get_param('byline'));
+		$this->assertEquals('0', $video->get_param('title'));
+		$this->assertEquals('0', $video->get_param('portrait'));
+		$this->assertEquals('c9ff23', $video->get_param('color'));
+		$this->assertEquals('1', $video->get_param('autoplay'));
+		$this->assertEquals('1', $video->get_param('loop'));
 		
 	}
 	

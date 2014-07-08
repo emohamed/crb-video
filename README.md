@@ -156,50 +156,22 @@ try {
     <tr>
         <th><code>set_param($arg, $val)</code></th>
         <td>
-<p>Sets GET param of the embed source.</p>
+<p>Sets GET param of the embed source. See params section below for reference to currently supported params. </p>
 
-<p><strong>Youtube parameters</strong></p>
-
-<ul>
-    <li><code>autohide</code> - whether the video controls will automatically hide after a video begins playing. Values: `2` (default), `1`, and `0`. </li>
-    <li><code>autoplay</code> - whether or not the initial video will autoplay when the player loads. Values: `0`(default) or `1`. </li>
-    <li><code>color</code> - specifies the color in the player's video progress bar to highlight the amount of the video that the viewer has already seen. Values: red(default), white</li>
-    <li><code>controls</code> - this parameter indicates whether the video player controls will display. Values: 0, 1(default), or 2</li>
-    <li><code>enablejsapi</code> - setting this to 1 will enable the Javascript API. Values: 0(default) or 1</li>
-    <li><code>iv_load_policy</code> - setting to 1 will cause video annotations to be shown by default, whereas setting to 3 will cause video annotations to not be shown by default. Values: 1(default) or 3. </li>
-    <li><code>loop</code> - setting of 1 will cause the player to play the initial video again and again. Values: 0(default) or 1</li>
-    <li><code>modestbranding</code> - lets you use a YouTube player that does not show a YouTube logo. Set the parameter value to 1 to prevent the YouTube logo from displaying in the control bar.</li>
-    <li><code>origin</code> - provides an extra security measure for the IFrame API. If you are using the IFrame API, which means you are setting the enablejsapi parameter value to 1, you should always specify your domain as the origin parameter value.</li>
-    <li><code>playlist</code> - value is a comma-separated list of video IDs to play. If you specify a value, the first video that plays will be the VIDEO_ID specified in the URL path, and the videos specified in the playlist parameter will play thereafter.</li>
-    <li><code>playsinline</code> - controls whether videos play inline or fullscreen in an HTML5 player on iOS</li>
-    <li><code>rel</code> indicates whether the player should show related videos when playback of the initial video ends. Values: 0 or 1(default)</li>
-    <li><code>showinfo</code> - If you set the parameter value to 0, then the player will not display information like the video title and uploader before the video starts playing. Values: 0 or 1(default)</li>
-    <li><code>start</code> causes the player to begin playing the video at the given number of seconds from the start of the video</li>
-    <li><code>theme</code> - indicates whether the embedded player will display player controls (like a play button or volume control) within a dark or light control bar.</li>
-</ul>
-
-<a href="https://developers.google.com/youtube/player_parameters#Parameters">Reference</a>
-
-<p><strong>Vimeo parameters</strong></p>
-
-<ul>
-    <li><code>autopause</code> - Enables or disables pausing this video when another video is played. Defaults to 1.</li>
-    <li><code>autoplay</code> - Play the video automatically on load. Defaults to 0. Note that this won’t work on some devices.</li>
-    <li><code>badge</code> - Enables or disables the badge on the video. Defaults to 1.</li>
-    <li><code>byline</code> - Show the user’s byline on the video. Defaults to 1.</li>
-    <li><code>color</code> - Specify the color of the video controls. Defaults to 00adef. Make sure that you don’t include the #.</li>
-    <li><code>loop</code> - Play the video again when it reaches the end. Defaults to 0.</li>
-    <li><code>player_id</code> - A unique id for the player that will be passed back with all Javascript API responses.</li>
-    <li><code>portrait</code> - Show the user’s portrait on the video. Defaults to 1.</li>
-    <li><code>title</code> - Show the title on the video. Defaults to 1.</li>
-</ul>
-<a href="http://developer.vimeo.com/player/embedding#universal-parameters">Reference</a>
         </td>
     </tr>
 
     <tr>
         <th><code>get_param($arg)</code></th>
         <td>Returns a parameter value. </td>
+    </tr>
+
+    <tr>
+        <th><code>set_params($params)</code></th>
+        <td>
+<p>Sets multiple params of the embed source. The provided parapms array must contain params pairs where the key is the parameter name and the value is the parameter value. See params section below for reference to currently supported params. </p>
+
+        </td>
     </tr>
 
     <tr>
@@ -250,5 +222,155 @@ try {
     <tr>
         <th><code>get_thumbnail()</code></th>
         <td>Returns thumbnail for the video. </td>
+    </tr>
+</table>
+
+## Params
+This section provides reference for commonly used parameters for video providers. Note that these are subject of change: the below reference may be inaccurate by the time you read this.
+
+### Youtube parameters
+
+<a href="https://developers.google.com/youtube/player_parameters#Parameters">Full Reference</a>
+
+<table>
+    <tr>
+        <th>Parameter</th>
+        <th>Values</th>
+        <th>Default</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <th><code>autohide</code></th> 
+        <td>2, 1, 0</td>
+        <td>2</td>
+        <td>whether the video controls will automatically hide after a video begins playing. </td>
+    </tr>
+    <tr>
+        <th><code>autoplay</code></th>
+        <td>0, 1</td>
+        <td>0</td>
+        <td>whether or not the initial video will autoplay when the player loads. </td>
+    </tr>
+    <tr>
+        <th><code>color</code></th>
+        <td>red, white</td>
+        <td>red</td>
+        <td>specifies the color in the player's video progress bar to highlight the amount of the video that the viewer has already seen. </td>
+    </tr>
+    <tr>
+        <th><code>controls</code></th>
+        <td>0, 1, 2</td>
+        <td>1</td>
+        <td>this parameter indicates whether the video player controls will display. </td>
+    </tr>
+    <tr>
+        <th><code>enablejsapi</code></th>
+        <td>0, 1</td>
+        <td>0</td>
+        <td>setting this to 1 will enable the Javascript API. </td>
+    </tr>
+    <tr>
+        <th><code>iv_load_policy</code></th>
+        <td>1, 3</td>
+        <td>1</td>
+        <td>setting to 1 will cause video annotations to be shown by default, whereas setting to 3 will cause video annotations to not be shown by default. </td>
+    </tr>
+    <tr>
+        <th><code>loop</code></th>
+        <td>0, 1</td>
+        <td>0</td>
+        <td>setting of 1 will cause the player to play the initial video again and again. </td>
+    </tr>
+    <tr>
+        <th><code>modestbranding</code></th>
+        <td>0, 1</td>
+        <td>0</td>
+        <td>lets you use a YouTube player that does not show a YouTube logo. Set the parameter value to 1 to prevent the YouTube logo from displaying in the control bar.</td>
+    </tr>
+    <tr>
+        <th><code>origin</code></th>
+        <td>0, 1</td>
+        <td>0</td>
+        <td>provides an extra security measure for the IFrame API. If you are using the IFrame API, which means you are setting the enablejsapi parameter value to 1, you should always specify your domain as the origin parameter value.</td>
+    </tr>
+    <tr>
+        <th><code>playlist</code></th>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>value is a comma-separated list of video IDs to play. If you specify a value, the first video that plays will be the VIDEO_ID specified in the URL path, and the videos specified in the playlist parameter will play thereafter.</td>
+    </tr>
+    <tr>
+        <th><code>playsinline</code></th>
+        <td>0, 1</td>
+        <td>0</td>
+        <td>controls whether videos play inline or fullscreen in an HTML5 player on iOS</td>
+    </tr>
+    <tr>
+        <th><code>rel</code> </th>
+        <td>0, 1</td>
+        <td>1</td>
+        <td>indicates whether the player should show related videos when playback of the initial video ends. </td>
+    </tr>
+    <tr>
+        <th><code>showinfo</code></th>
+        <td>0, 1</td>
+        <td>1</td>
+        <td>if you set the parameter value to 0, then the player will not display information like the video title and uploader before the video starts playing. </td>
+    </tr>
+    <tr>
+        <th><code>start</code></th>
+        <td>N/A</td>
+        <td>0</td>
+        <td>causes the player to begin playing the video at the given number of seconds from the start of the video</td>
+    </tr>
+    <tr>
+        <th><code>theme</code></th>
+        <td>dark, light</td>
+        <td>dark</td>
+        <td>indicates whether the embedded player will display player controls (like a play button or volume control) within a dark or light control bar.</td>
+    </tr>
+</table>
+
+
+### Vimeo parameters
+
+<a href="http://developer.vimeo.com/player/embedding#universal-parameters">Full Reference</a>
+
+<table>
+    <tr>
+        <th><code>autopause</code></th>
+        <td>enables or disables pausing this video when another video is played. Defaults to 1.</td>
+    </tr>
+    <tr>
+        <th><code>autoplay</code></th>
+        <td>play the video automatically on load. Defaults to 0. Note that this won’t work on some devices.</td>
+    </tr>
+    <tr>
+        <th><code>badge</code></th>
+        <td>enables or disables the badge on the video. Defaults to 1.</td>
+    </tr>
+    <tr>
+        <th><code>byline</code></th>
+        <td>show the user’s byline on the video. Defaults to 1.</td>
+    </tr>
+    <tr>
+        <th><code>color</code></th>
+        <td>specify the color of the video controls. Defaults to <code>00adef</code>. Make sure that you don’t include the <code>#</code>.</td>
+    </tr>
+    <tr>
+        <th><code>loop</code></th>
+        <td>play the video again when it reaches the end. Defaults to 0.</td>
+    </tr>
+    <tr>
+        <th><code>player_id</code></th>
+        <td>a unique id for the player that will be passed back with all Javascript API responses.</td>
+    </tr>
+    <tr>
+        <th><code>portrait</code></th>
+        <td>show the user’s portrait on the video. Defaults to 1.</td>
+    </tr>
+    <tr>
+        <th><code>title</code></th>
+        <td>show the title on the video. Defaults to 1.</td>
     </tr>
 </table>

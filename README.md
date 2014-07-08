@@ -8,16 +8,20 @@ t require understanding of all types of URL and embed formats provided by video 
 ```php	
 <?php
 $youtube_link = "https://www.youtube.com/watch?v=n4RjJKxsamQ";
-$video = Carbon_Video::create($youtube_link);
-
-// Print HTML video embed code with specified dimensions
-echo $video->get_embed_code(640, 480);
-
-// Remove related videos and print embed code
-echo $video->set_param('rel', '0')->get_embed_code();
-
-// Print video thumbnail
-echo $video->get_thumbnail();
+try {
+    $video = Carbon_Video::create($youtube_link);
+  
+    // Print HTML video embed code with specified dimensions
+    echo $video->get_embed_code(640, 480);
+  
+    // Remove related videos and print embed code
+    echo $video->set_param('rel', '0')->get_embed_code();
+  
+    // Print video thumbnail
+    echo $video->get_thumbnail();
+} catch(Carbon_Video_Exception $e) {
+    // Handle error: $youtube_link isn't parse-able
+}
 ?>
 ```
 
@@ -41,23 +45,31 @@ Once created, you can modify the dimensions or the params of the video. Then, yo
 
 ## Examples
 
-Accept Youtube URL, produce HTML5 Embed with 640 x 480:
+Accept Youtube URL, return 640 x 480 HTML5 Embed:
 
-```php	
+```php
 <?php
-$youtube_link = "https://www.youtube.com/watch?v=n4RjJKxsamQ";
-echo Carbon_Video::create($youtube_link)->get_embed_code(640, 480);
+try {
+    $youtube_link = "https://www.youtube.com/watch?v=n4RjJKxsamQ";
+    echo Carbon_Video::create($youtube_link)->get_embed_code(640, 480);
+} catch(Carbon_Video_Exception $e) {
+    // Handle error: $youtube_link isn't parse-able
+}
 ?>
-```
+```   
 
 Accept Youtube URL, produce embed without related videos:
 
 ```php
-<?php
-$youtube_link = "https://www.youtube.com/watch?v=n4RjJKxsamQ";
-echo Carbon_Video::create($youtube_link)
-    ->set_param('rel', 0)
-    ->get_embed_code();
+    <?php
+try {
+    $youtube_link = "https://www.youtube.com/watch?v=n4RjJKxsamQ";
+    echo Carbon_Video::create($youtube_link)
+        ->set_param('rel', 0)
+        ->get_embed_code();
+} catch(Carbon_Video_Exception $e) {
+    // Handle error: $youtube_link isn't parse-able
+}
 ?>
 ```
 
@@ -65,8 +77,12 @@ Accept YouTube shortlink and produce embed code:
 
 ```php
 <?php
-$youtube_share_url = "http://youtu.be/n4RjJKxsamQ";
-echo Carbon_Video::create($youtube_share_url)->get_embed_code();
+try {
+    $youtube_share_url = "http://youtu.be/n4RjJKxsamQ";
+    echo Carbon_Video::create($youtube_share_url)->get_embed_code();
+} catch(Carbon_Video_Exception $e) {
+    // Handle error: $youtube_share_url isn't parse-able
+}
 ?>
 ```
 
@@ -74,12 +90,16 @@ Accept Flash embed code, remove controls, add autoplay, and print HTML embed:
 
 ```php
 <?php
-$embed_code = '<object width="560" height="315"><param name="movie" value="//www.youtube.com/v/n4RjJKxsamQ?version=3&amp;hl=en_US&amp;rel=0"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="//www.youtube.com/v/n4RjJKxsamQ?version=3&amp;hl=en_US&amp;rel=0" type="application/x-shockwave-flash" width="560" height="315" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
-
-echo Carbon_Video::create($embed_code)
-    ->set_param('controls', 0)
-    ->set_param('autoplay', 1)
-    ->get_embed_code();
+try {
+    $embed_code = '';
+    
+    echo Carbon_Video::create($embed_code)
+        ->set_param('controls', 0)
+        ->set_param('autoplay', 1)
+        ->get_embed_code();
+} catch(Carbon_Video_Exception $e) {
+    // Handle error: $embed_code isn't parse-able
+}
 ?>
 ```
 
@@ -87,34 +107,46 @@ Accept HTML embed code, remove controls, add autoplay, and print embed:
 
 ```php
 <?php
-$embed_code = '<iframe width="560" height="315" src="//www.youtube.com/embed/n4RjJKxsamQ?rel=0" frameborder="0" allowfullscreen></iframe>';
-
-echo Carbon_Video::create($embed_code)
-    ->set_param('controls', 0)
-    ->set_param('autoplay', 1)
-    ->get_embed_code();
+try {
+    $embed_code = '<iframe width="560" height="315" src="//www.youtube.com/embed/n4RjJKxsamQ?rel=0" frameborder="0" allowfullscreen></iframe>';
+    
+    echo Carbon_Video::create($embed_code)
+        ->set_param('controls', 0)
+        ->set_param('autoplay', 1)
+        ->get_embed_code();
+} catch(Carbon_Video_Exception $e) {
+    // Handle error: $embed_code isn't parse-able
+}
 ?>
 ```
 
-The library understands the "t" param in the shortlinks and translates it to start 
+The library understands the "t" param in the shortlinks and translates it to start
 
 ```php
 <?php
-$embed_code = 'http://youtu.be/XFkzRNyygfk?t=11s';
-
-echo Carbon_Video::create($embed_code)
-    ->get_embed_code();
+try {
+    $embed_code = 'http://youtu.be/XFkzRNyygfk?t=11s';
+    
+    echo Carbon_Video::create($embed_code)
+        ->get_embed_code();
+} catch(Carbon_Video_Exception $e) {
+    // Handle error: $embed_code isn't parse-able
+}
 ?>
 ```
 
-You can also construct objects from direct embed URLs(instead of the whole iframe code). 
+You can also construct objects from direct embed URLs(instead of the whole iframe code).
 
 ```php
 <?php
-$embed_code = '//www.youtube.com/embed/LlhfzIQo-L8?rel=0';
-
-echo Carbon_Video::create($embed_code)
-    ->get_embed_code();
+try {
+    $embed_code = '//www.youtube.com/embed/LlhfzIQo-L8?rel=0';
+    
+    echo Carbon_Video::create($embed_code)
+        ->get_embed_code();
+} catch(Carbon_Video_Exception $e) {
+    // Handle error: $embed_code isn't parse-able
+}
 ?>
 ```
 

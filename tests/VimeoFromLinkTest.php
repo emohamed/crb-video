@@ -9,11 +9,10 @@ class VimeoFromLinkTest extends PHPUnit_Framework_TestCase {
 	function tearDown() {
 		
 	}
-	/**
-	 * @expectedException Carbon_Video_Exception
-	 */
 	function testBadLink() {
 		$video = Carbon_Video::create("http://vimeo|com/2526536");
+		$this->assertTrue($video->is_broken());
+		$this->assertEquals('', $video->get_embed_code());
 	}
 
 	function testStandardLink() {

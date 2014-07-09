@@ -74,14 +74,15 @@ abstract class Carbon_Video {
 		}
 
 		if (is_null($video)) {
-			throw new Carbon_Video_Exception("Unable to find provider for video: " . $video_code);
+			// No video provider recognized the video
+			$video = new Carbon_Video_Broken();
 		}
 
 		$result = $video->parse($video_code);
 
 		if (!$result) {
 			// Couldn't parse the video code. 
-			throw new Carbon_Video_Exception("Unable to parse video code: " . $video_code);
+			$video = new Carbon_Video_Broken();
 		}
 
 		return $video;

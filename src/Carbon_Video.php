@@ -65,7 +65,7 @@ abstract class Carbon_Video {
 		$video_providers = array("Youtube", "Vimeo");
 
 		foreach ($video_providers as $video_provider) {
-			$class_name = "Carbon_Video$video_provider";
+			$class_name = "Carbon_Video_$video_provider";
 
 			if (call_user_func(array($class_name, 'test'), $video_code)) {
 				$video = new $class_name();
@@ -102,6 +102,10 @@ abstract class Carbon_Video {
 	function __construct() {
 		$this->cache = new Carbon_Video_Cache();
 		$this->http = new Carbon_Video_Http();
+	}
+
+	public function is_broken() {
+		return empty($this->video_id);
 	}
 
 	public function get_width() {

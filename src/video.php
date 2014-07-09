@@ -1,7 +1,8 @@
 <?php
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "Carbon_Video.php");
-require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "Carbon_VideoVimeo.php");
-require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "Carbon_VideoYoutube.php");
+require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "Carbon_Video_Vimeo.php");
+require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "Carbon_Video_Youtube.php");
+require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . "Carbon_Video_Broken.php");
 
 // Some dependencies from WordPress when the code doesn't run in WordPress environment
 if (!class_exists('WP_Query')) {

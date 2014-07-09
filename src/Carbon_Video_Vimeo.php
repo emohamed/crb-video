@@ -1,6 +1,6 @@
 <?php
 
-class Carbon_VideoVimeo extends Carbon_Video {
+class Carbon_Video_Vimeo extends Carbon_Video {
 	protected $default_width  = '500';
 	protected $default_height = '281';
 

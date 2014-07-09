@@ -12,7 +12,7 @@ class YoutubeIframeEmbedTest extends PHPUnit_Framework_TestCase {
 	}
 
 	function testConstructor() {
-		$this->assertTrue($this->video instanceof Carbon_VideoYoutube);
+		$this->assertTrue($this->video instanceof Carbon_Video_Youtube);
 		
 	}
 

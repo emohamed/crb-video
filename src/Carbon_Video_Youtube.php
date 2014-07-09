@@ -1,5 +1,5 @@
 <?php
-class Carbon_VideoYoutube extends Carbon_Video {
+class Carbon_Video_Youtube extends Carbon_Video {
 	protected $default_width = '640';
 	protected $default_height = '360';
 

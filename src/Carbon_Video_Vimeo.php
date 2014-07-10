@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Vimeo handling code
+ */
 class Carbon_Video_Vimeo extends Carbon_Video {
 	protected $default_width  = '500';
 	protected $default_height = '281';

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Youtube handling code. 
+ */
 class Carbon_Video_Youtube extends Carbon_Video {
 	protected $default_width = '640';
 	protected $default_height = '360';

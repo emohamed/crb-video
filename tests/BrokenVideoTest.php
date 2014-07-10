@@ -30,4 +30,10 @@ class BrokenVideoTest extends PHPUnit_Framework_TestCase {
 		$video = Carbon_Video::create('http://vimeo.com/channels/staffpicks');
 		$this->assertTrue($video->is_broken());
 	}
+
+	function testVboxVideo() {
+		$link = 'http://vbox7.com/play:e4756d58';
+    
+	    $this->assertFalse(Carbon_Video::create($link)->get_embed_code());
+	}
 }

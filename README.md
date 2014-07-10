@@ -8,20 +8,17 @@ t require understanding of all types of URL and embed formats provided by video 
 ```php	
 <?php
 $youtube_link = "https://www.youtube.com/watch?v=n4RjJKxsamQ";
-try {
-    $video = Carbon_Video::create($youtube_link);
-  
-    // Print HTML video embed code with specified dimensions
-    echo $video->get_embed_code(640, 480);
-  
-    // Remove related videos and print embed code
-    echo $video->set_param('rel', '0')->get_embed_code();
-  
-    // Print video thumbnail
-    echo $video->get_thumbnail();
-} catch(Carbon_Video_Exception $e) {
-    // Handle error: $youtube_link isn't parse-able
-}
+
+$video = Carbon_Video::create($youtube_link);
+
+// Print HTML video embed code with specified dimensions
+echo $video->get_embed_code(640, 480);
+
+// Remove related videos and print embed code
+echo $video->set_param('rel', '0')->get_embed_code();
+
+// Print video thumbnail
+echo $video->get_thumbnail();
 ?>
 ```
 
@@ -49,12 +46,8 @@ Accept Youtube URL, return 640 x 480 HTML5 Embed:
 
 ```php
 <?php
-try {
     $youtube_link = "https://www.youtube.com/watch?v=n4RjJKxsamQ";
     echo Carbon_Video::create($youtube_link)->get_embed_code(640, 480);
-} catch(Carbon_Video_Exception $e) {
-    // Handle error: $youtube_link isn't parse-able
-}
 ?>
 ```   
 
@@ -62,13 +55,10 @@ Accept Youtube URL, produce embed without related videos:
 
 ```php
     <?php
-try {
     $youtube_link = "https://www.youtube.com/watch?v=n4RjJKxsamQ";
     echo Carbon_Video::create($youtube_link)
         ->set_param('rel', 0)
         ->get_embed_code();
-} catch(Carbon_Video_Exception $e) {
-    // Handle error: $youtube_link isn't parse-able
 }
 ?>
 ```
@@ -77,12 +67,8 @@ Accept YouTube shortlink and produce embed code:
 
 ```php
 <?php
-try {
     $youtube_share_url = "http://youtu.be/n4RjJKxsamQ";
     echo Carbon_Video::create($youtube_share_url)->get_embed_code();
-} catch(Carbon_Video_Exception $e) {
-    // Handle error: $youtube_share_url isn't parse-able
-}
 ?>
 ```
 
@@ -90,16 +76,12 @@ Accept Flash embed code, remove controls, add autoplay, and print HTML embed:
 
 ```php
 <?php
-try {
     $embed_code = '';
     
     echo Carbon_Video::create($embed_code)
         ->set_param('controls', 0)
         ->set_param('autoplay', 1)
         ->get_embed_code();
-} catch(Carbon_Video_Exception $e) {
-    // Handle error: $embed_code isn't parse-able
-}
 ?>
 ```
 
@@ -107,16 +89,12 @@ Accept HTML embed code, remove controls, add autoplay, and print embed:
 
 ```php
 <?php
-try {
     $embed_code = '<iframe width="560" height="315" src="//www.youtube.com/embed/n4RjJKxsamQ?rel=0" frameborder="0" allowfullscreen></iframe>';
     
     echo Carbon_Video::create($embed_code)
         ->set_param('controls', 0)
         ->set_param('autoplay', 1)
         ->get_embed_code();
-} catch(Carbon_Video_Exception $e) {
-    // Handle error: $embed_code isn't parse-able
-}
 ?>
 ```
 
@@ -124,14 +102,10 @@ The library understands the "t" param in the shortlinks and translates it to sta
 
 ```php
 <?php
-try {
     $embed_code = 'http://youtu.be/XFkzRNyygfk?t=11s';
     
     echo Carbon_Video::create($embed_code)
         ->get_embed_code();
-} catch(Carbon_Video_Exception $e) {
-    // Handle error: $embed_code isn't parse-able
-}
 ?>
 ```
 
@@ -139,14 +113,28 @@ You can also construct objects from direct embed URLs(instead of the whole ifram
 
 ```php
 <?php
-try {
     $embed_code = '//www.youtube.com/embed/LlhfzIQo-L8?rel=0';
     
     echo Carbon_Video::create($embed_code)
         ->get_embed_code();
-} catch(Carbon_Video_Exception $e) {
-    // Handle error: $embed_code isn't parse-able
-}
+?>
+```
+
+Invalid video code fails silently
+```php
+<?php
+    $embed_code = 'http://vbox7.com/play:e4756d58';
+    
+    $video = Carbon_Video::create($embed_code);
+
+    echo $video->get_embed_code(); // nothing gets printed
+
+    if ($video->is_broken()) {
+        echo "Please enter valid video. ";
+    } else {
+        echo $video->get_embed_code(); 
+    }
+
 ?>
 ```
 
@@ -156,8 +144,7 @@ try {
     <tr>
         <th><code>set_param($arg, $val)</code></th>
         <td>
-<p>Sets GET param of the embed source. See params section below for reference to currently supported params. </p>
-
+            Sets GET param of the embed source. See params section below for reference to currently supported params.
         </td>
     </tr>
 
@@ -169,8 +156,7 @@ try {
     <tr>
         <th><code>set_params($params)</code></th>
         <td>
-<p>Sets multiple params of the embed source. The provided parapms array must contain params pairs where the key is the parameter name and the value is the parameter value. See params section below for reference to currently supported params. </p>
-
+            Sets multiple params of the embed source. The provided parapms array must contain params pairs where the key is the parameter name and the value is the parameter value.
         </td>
     </tr>
 
@@ -196,7 +182,7 @@ try {
 
     <tr>
         <th><code>get_link()</code></th>
-        <td>Return permalink for the video. </td>
+        <td>Returns permalink for the video. </td>
     </tr>
 
     <tr>
@@ -206,7 +192,7 @@ try {
 
     <tr>
         <th><code>get_embed_code([$embed_width[, $embed_height]])</code></th>
-        <td>Generates HTML iframe markup for the object. When width and height are provided, the embed will use them; if they're ommited, the embed will obtain it's original values(whenever the object was constructed from embed code). </td>
+        <td>Generates HTML iframe markup for the object. When width and height are provided, the embed will use them; if they're omitted, the embed will obtain it's original values(whenever the object was constructed from embed code). </td>
     </tr>
 
     <tr>
@@ -222,6 +208,11 @@ try {
     <tr>
         <th><code>get_thumbnail()</code></th>
         <td>Returns thumbnail for the video. </td>
+    </tr>
+
+    <tr>
+        <th><code>is_broken()</code></th>
+        <td>Returns true if the embed code wasn't parse-able. </td>
     </tr>
 </table>
 

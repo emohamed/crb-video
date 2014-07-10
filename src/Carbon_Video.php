@@ -1,4 +1,10 @@
 <?php
+/**
+ * Base class for video objects.
+ * 
+ * Defines the interface for working with video embeds and provides factory method for 
+ * creating new objects(`create`).
+ */
 abstract class Carbon_Video {
 	/**
 	 * Width and height container
@@ -89,16 +95,52 @@ abstract class Carbon_Video {
 	}
 
 	// Abstract methods implemented in each concrete class
+
+	/**
+	 * Handles the paring of all formats associated with the partuclar video provider
+	 * 
+	 * @param  string $video_code URL, embed code, etc.
+	 * @return bool             whether the operations has succeeded
+	 */
 	abstract public function parse($video_code);
+	
+	/**
+	 * Return link to the video page's at the provider site
+	 * @return string
+	 */
 	abstract public function get_link();
+	
+	/**
+	 * Returns short link for the video at the provider site
+	 * @return string
+	 */
 	abstract public function get_share_link();
+	
+	/**
+	 * Returns iframe-based embed code with the specified dimensions
+	 * @param  int $width
+	 * @param  int $height
+	 * @return string
+	 */
+	abstract public function get_embed_code($width=null, $height=null);
+	
 	/**
 	 * Return direct URL to the iframe embed(without the iframe tag HTML)
 	 * @return string URL to youtube embed
 	 */
 	abstract public function get_embed_url();
-	abstract public function get_embed_code($width=null, $height=null);
+
+	/**
+	 * Return URL of image thumbnail for the current video
+	 * @return string
+	 */
 	abstract public function get_thumbnail();
+
+	/**
+	 * Return URL of big image for the current video
+	 * @return string
+	 */
+	abstract public function get_image();
 
 	function __construct() {
 		$this->cache = new Carbon_Video_Cache();

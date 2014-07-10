@@ -21,4 +21,7 @@ class Carbon_Video_Broken extends Carbon_Video {
 	public function get_thumbnail() {
 		return false;
 	}
+	public function get_image() {
+		return false;
+	}
 }

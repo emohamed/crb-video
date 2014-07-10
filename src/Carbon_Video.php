@@ -187,5 +187,3 @@ abstract class Carbon_Video {
 	}
 	
 }
-
-class Carbon_Video_Exception extends Exception {}
